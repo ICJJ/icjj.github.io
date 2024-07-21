@@ -32,7 +32,7 @@ post-container"><h1 id=amba-apb-协议规范>AMBA APB 协议规范</h1><blockquo
    text:"图3.1.1 无等待的写传输"
    } 
 }
-  </code></pre></details><ul><li>第一个周期[setup]，PSEL拉高，且PADDR、PWRITE、PWDATA必须有效；</li><li>第二个周期[access]，PENABLE拉高，PREADY被从机拉高表明接受一笔传输，且PADDR、PWRITE、PWDATA保持不变；</li><li>第三个周期[idle]，PENABLE和PSEL拉低。</li></ul><p>＃＃＃ 3.1.2 有等待写
+  </code></pre></details><ul><li>第一个周期[setup]，psel拉高，且paddr、pwrite、pwdata必须有效；</li><li>第二个周期[access]，penable拉高，pready被从机拉高表明接受一笔传输，且paddr、pwrite、pwdata保持不变；</li><li>第三个周期[idle]，penable和psel拉低。</li></ul><p>＃＃＃ 3.1.2 有等待写
 <img src=https://icjj.github.io/icer/img/post/apb/%e6%9c%89%e7%ad%89%e5%be%85%e7%9a%84%e5%86%99%e4%bc%a0%e8%be%93.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
 {signal: 
 [
@@ -54,10 +54,9 @@ post-container"><h1 id=amba-apb-协议规范>AMBA APB 协议规范</h1><blockquo
    text:"图3.1.2 两个周期等待的写传输"
    } 
 }
-  </code></pre></details><ul><li><p>第一个周期[setup]，PSEL拉高，且PADDR、PWRITE、PWDATA必须有效；</p></li><li><p>第二三个周期[WAITE]，PENABLE拉高，PREADY拉低，等待两个周期，PADDR、PWTITE、PWDATA保持不变；</p></li><li><p>第四个周期[access]，PREADY拉高，PREADY被从机拉高表明接受一笔传输，且PADDR、PWRITE、PWDATA保持不变；</p></li><li><p>第五个周期[idle]，PENABLE和PSEL拉低。</p></li><li><p>在访问周期中，pready拉低两个周期拉长了整个传输过程</p></li><li><p>且在整个阶段除了时序图中的信号之外，PSTRB、PPROT、PAUSER、PWUSER都应该保持不变，可以说等待期间，主机发出的任何信号都应该保持不变；</p></li></ul><blockquote><p>Note：当PENABLE为低时，PREADY可以是任何值，这确保了只有两个周期进行访问的外设PREADY可以一直为高
-<span style=background-color:#ff0>不明白[原文：PREADY can take any value when PENABLE is LOW. This ensures that peripherals that have a fixed two cycle
+  </code></pre></details><ul><li><p>第一个周期[setup]，PSEL拉高，且PADDR、PWRITE、PWDATA必须有效；</p></li><li><p>第二三个周期[WAITE]，PENABLE拉高，PREADY拉低，等待两个周期，PADDR、PWTITE、PWDATA保持不变；</p></li><li><p>第四个周期[access]，PREADY拉高，PREADY被从机拉高表明接受一笔传输，且PADDR、PWRITE、PWDATA保持不变；</p></li><li><p>第五个周期[idle]，PENABLE和PSEL拉低。</p></li><li><p>在访问周期中，pready拉低两个周期拉长了整个传输过程</p></li><li><p>且在整个阶段除了时序图中的信号之外，PSTRB、PPROT、PAUSER、PWUSER都应该保持不变，可以说等待期间，主机发出的任何信号都应该保持不变；</p></li></ul><blockquote><p>Note：当PENABLE为低时，PREADY可以是任何值，这确保了只有两个周期进行访问的外设PREADY可以一直为高</p></blockquote><p><span style=background-color:#ff0>不明白[原文：PREADY can take any value when PENABLE is LOW. This ensures that peripherals that have a fixed two cycle
 access can tie PREADY HIGH.
-]</span></p></blockquote><h2 id=32-write-strobe写选通>3.2 write strobe（写选通）</h2><ul><li>PSTRB信号为数据传输提供了一种稀疏的方式，也就是将一笔数据分开几次传输。</li><li>每次PSTRB传输对应了1byte的数据。</li><li>PSTRB为高表明当前属于数据传输的一部分即1byte数据有效；<table><thead><tr><th>31  24</th><th>23  16</th><th>15  8</th><th>7  0</th></tr></thead><tbody><tr><td>PSTRB[3]</td><td>PSTRB[2]</td><td>PSTRB[1]</td><td>PSTRB[0]</td></tr></tbody></table></li><li>对于读传输来说，主机发送的PSTRB所有byte必须拉低。</li></ul><h3 id=321-pstrb的兼容性>3.2.1 PSTRB的兼容性</h3><ul><li>由于PSTRB属于可选的信号，因此主机与从机是否有该信号会引起兼容性的问题，其兼容性应遵循下面的列表。<table><thead><tr><th>PSTRB</th><th>从机不存在该信号</th><th>从机存在该信号</th></tr></thead><tbody><tr><td>主机不存在该信号</td><td>不支持稀疏写</td><td>支持稀疏写，PSTRB应该与PWRITE直接连接</td></tr><tr><td>主机存在该信号</td><td>不支持稀疏写</td><td>不支持稀疏写</td></tr></tbody></table></li></ul><h2 id=33-读传输>3.3 读传输</h2><ul><li>包含有两种方式</li><li>一种是无等待</li><li>一种是有等待</li></ul><h3 id=331-无等待读>3.3.1 无等待读</h3><p><img src=https://icjj.github.io/icer/img/post/apb/%e6%97%a0%e7%ad%89%e5%be%85%e7%9a%84%e8%af%bb%e4%bc%a0%e8%be%93.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
+]</span></p><h2 id=32-write-strobe写选通>3.2 write strobe（写选通）</h2><ul><li>PSTRB信号为数据传输提供了一种稀疏的方式，也就是将一笔数据分开几次传输。</li><li>每次PSTRB传输对应了1byte的数据。</li><li>PSTRB为高表明当前属于数据传输的一部分即1byte数据有效；</li></ul><table><thead><tr><th>31  24</th><th>23  16</th><th>15  8</th><th>7  0</th></tr></thead><tbody><tr><td>PSTRB[3]</td><td>PSTRB[2]</td><td>PSTRB[1]</td><td>PSTRB[0]</td></tr></tbody></table><ul><li>对于读传输来说，主机发送的PSTRB所有byte必须拉低。</li></ul><h3 id=321-pstrb的兼容性>3.2.1 PSTRB的兼容性</h3><ul><li>由于PSTRB属于可选的信号，因此主机与从机是否有该信号会引起兼容性的问题，其兼容性应遵循下面的列表。</li></ul><table><thead><tr><th>PSTRB</th><th>从机不存在该信号</th><th>从机存在该信号</th></tr></thead><tbody><tr><td>主机不存在该信号</td><td>不支持稀疏写</td><td>支持稀疏写，PSTRB应该与PWRITE直接连接</td></tr><tr><td>主机存在该信号</td><td>不支持稀疏写</td><td>不支持稀疏写</td></tr></tbody></table><h2 id=33-读传输>3.3 读传输</h2><ul><li>包含有两种方式</li><li>一种是无等待</li><li>一种是有等待</li></ul><h3 id=331-无等待读>3.3.1 无等待读</h3><p><img src=https://icjj.github.io/icer/img/post/apb/%e6%97%a0%e7%ad%89%e5%be%85%e7%9a%84%e8%af%bb%e4%bc%a0%e8%be%93.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
 {signal: 
 [
    {name:'PCLK', wave: 'P...',period:1},
@@ -75,10 +74,31 @@ access can tie PREADY HIGH.
  },
    foot:
    {
-   text:"图3.1.1 无等待的读传输"
+   text:"图3.3.1 无等待的读传输"
    } 
 }
-</code></pre></details><hr><ul class=pager><li class=next><a href=/icer/post/%E6%80%BB%E7%BA%BF%E9%80%9A%E8%AF%86/ data-toggle=tooltip data-placement=top title=总线通识>Next
+</code></pre></details><ul><li>整个流程类似于无等待写，PWRITE拉低</li></ul><h3 id=332-有等待读>3.3.2 有等待读</h3><p><img src=https://icjj.github.io/icer/img/post/apb/%e6%9c%89%e7%ad%89%e5%be%85%e7%9a%84%e8%af%bb%e4%bc%a0%e8%be%93.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
+{signal: 
+[
+   {name:'PCLK', wave: 'P.....'},
+   {name:'paddr', wave: '==...=',data:["","Addr1",""]},
+   {name:'PWRITE', wave: '=0...=',data:["",""]},
+   {name:'PSEL', wave: '=1...=',data:["",""]},
+   {name:'PENABLE', wave: '=01..=',data:["",""]},
+   {name:'PRDATA', wave: '=x..==',data:["","Data1",""]},
+   {name:'PREADY', wave: '=.0.1=',data:["",""]},
+ ],
+   head:
+   {
+   tick:0,
+   every:1
+ },
+   foot:
+   {
+   text:"图3.3.2 两个周期等待的读传输"
+   } 
+}
+  </code></pre></details><hr><ul class=pager><li class=next><a href=/icer/post/%E6%80%BB%E7%BA%BF%E9%80%9A%E8%AF%86/ data-toggle=tooltip data-placement=top title=总线通识>Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
 sidebar-container
