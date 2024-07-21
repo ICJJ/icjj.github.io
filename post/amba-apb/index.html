@@ -118,7 +118,7 @@ post-container"><h1 id=amba-apb-协议规范>AMBA APB 协议规范</h1><blockquo
    text:"图3.4.1 有错误的写传输"
    } 
 }
-  </code></pre></details><ul><li>PENABLE拉高之后的第一个周期，需要外设判断写的数据是否有误，处于传输中，并未传输完成，因此PREADY为低。在第二个周期，外设根据PWDATA给出相应的PSLVERR，传输完成，因此PREADY为高。</li></ul><h3 id=342-有错误的读传输>3.4.2 有错误的读传输</h3><p><img src=https://icjj.github.io/icer/img/post/apb/%e6%9c%89%e9%94%99%e8%af%af%e7%9a%84%e8%af%bb%e4%ba%8b%e5%8a%a1.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
+  </code></pre></details><ul><li>PENABLE拉高之后的第一个周期，需要外设判断写的数据是否有误，处于传输中，并未传输完成，因此PREADY为低。在第二个周期，外设根据PWDATA给出相应的PSLVERR，传输完成，因此PREADY为高。</li></ul><h3 id=342-读事务>3.4.2 读事务</h3><p><img src=https://icjj.github.io/icer/img/post/apb/%e6%9c%89%e9%94%99%e8%af%af%e7%9a%84%e8%af%bb%e4%ba%8b%e5%8a%a1.svg alt></p><details><summary>时序图wavedrom源码[折叠代码块]</summary><pre><code class=language-json5> 
 {signal: 
 [
    {name:'PCLK', wave: 'P....',period:1},
