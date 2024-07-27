@@ -32,7 +32,7 @@ AMBA AHB 实现了高性能、高时钟频率系统所需的功能，包括：</
 <em><a href="#图 1-3">图 1-3</a></em> 不包含在ahb5版本中附加的信号。</p></blockquote><h5 id=a-id113-互联113-互联a><a id="1.1.3 互联">1.1.3 互联</a></h5><p>互联组件提供了系统中主机和从机之间的连接。</p><p>单个主机系统只需要一个 <em><a href="#1.1.3.1 译码器">译码器</a></em> 和一个 <em><a href="#1.1.3.2 多路复用器">多路复用器</a></em> 。</p><p>多主机系统需要使用一种互连，它提供仲裁和将不同主机的信号路由到适当从机的功能。
 此路由对于地址、控制和写入数据信号是必需的。
 关于多主机系统中使用的不同方法的进一步细节，例如单层或多层互连，本规范中没有提供。
-可以参考 <em><a href=https://icjj.github.io/icer/document/DVI0015.pdf>Multi-layer AHB Technical Overview (ARM DVI 0045)</a></em> 。</p><h6 id=a-id1131-译码器1131-译码器a><a id="1.1.3.1 译码器">1.1.3.1 译码器</a></h6><p>该组件解码每个传输的地址，并为参与传输的从机提供选择信号。它还为多路复用器提供控制信号。
+可以参考 <em><a href=https://icjj.github.io/icer/document/DVI0045.pdf>Multi-layer AHB Technical Overview (ARM DVI 0045)</a></em> 。</p><h6 id=a-id1131-译码器1131-译码器a><a id="1.1.3.1 译码器">1.1.3.1 译码器</a></h6><p>该组件解码每个传输的地址，并为参与传输的从机提供选择信号。它还为多路复用器提供控制信号。
 在所有使用两个或更多从机的实现中，需要一个集中解码器。有关更多信息，请参见 <em><a href="#4.2 地址解码">4.2 地址解码</a></em> 。</p><h6 id=a-id1132-多路复用器1132-多路复用器a><a id="1.1.3.2 多路复用器">1.1.3.2 多路复用器</a></h6><p>一个从机到主机的多路复用器是必需的，以将从机的读取数据总线和响应信号多路复用到主机。解码器为多路复用器提供控制信号。
 在所有两个或两个以上多从机的实现中，都需要一个集中式多路复用器。有关更多信息，
 请参见 <em><a href="#4.3 多路复用器中的读数据和响应">4.3 多路复用器中的读数据和响应</a></em> 。</p><h4 id=a-id12-amba-ahb版本12-amba-ahb版本a><a id="1.2 amba ahb版本">1.2 AMBA AHB版本</a></h4><p>本规范的A版描述了AHB-Lite接口，B版引入了基于AHB-Lite并具有一些附加功能的AHB5。</p><p>本文件的版本是C版，新增了以下主题：</p><ul><li>信号位宽属性；Signal width properties，详见 <em><a href="#2.2 主机信号">2.2 主机信号</a></em> 。</li><li>脉冲写信号；Write Strobes，详见 <em><a href="#3.5 脉冲写">3.5 脉冲写</a></em> 。</li><li>user信号更新；，详见 <em><a href="#11.1 user信号描述">11.1 user信号描述</a></em> 。</li><li>接口保护校验；Interface protection using parity，详见
@@ -275,7 +275,7 @@ AMBA AHB支持高时钟频率、单时钟边缘操作、突发传输和非三态
 通过系统到外设总线桥使用APB连接到主系统总线可以帮助减少系统功耗。</li><li>AXI：</br>一种AMBA总线协议，支持:<ul><li>地址或控制和数据的独立阶段</li><li>使用字节通道触发的非对齐数据传输</li><li>仅发出起始地址的基于突发的事务</li><li>独立的读写数据通道</li><li>发出多个未决地址</li><li>无序事务完成</li><li>可选地添加寄存器阶段以满足时序或重新传播要求</li><li>AXI协议包括用于低功耗操作的可选信号扩展</li></ul></li><li>Beat(拍)：</br>替代术语用于描述突发内的单个传输。例如，在AMBA AHB中，一个INCR4突发包含四个节拍。</li><li>Burst(突发)：</br>以组传输到连续地址。在AMBA协议中，突发由指示突发长度以及地址递增方式的信号控制。</li><li>DoubleWord(双字)：</br>64位数据项。双字通常在Arm系统中至少要字对齐。</li><li>Endianness(字节序)：
 当该结构存储在内存中时，确定数据结构中连续字节的顺序的方案。</li><li>Halfword(半字)：</br>16位数据项。半字通常在Arm系统中半字对齐 。
 Processor(处理器)：</br>执行处理的实体的通用术语。
-Word(字)：</br>32位数据项。字通常在Arm系统中字对齐。</li></ul><hr><ul class=pager><li class=previous><a href=/icer/post/amba-apb/ data-toggle=tooltip data-placement=top title=AMBA-APB>&larr;
+Word(字)：</br>32位数据项。字通常在Arm系统中字对齐。</li></ul><hr><ul class=pager><li class=previous><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/%E6%80%BB%E7%BA%BF%E9%80%9A%E8%AF%86/ data-toggle=tooltip data-placement=top title=总线通识>Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
@@ -289,6 +289,7 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/bus title=bus>bus
 </a><a href=/icer/tags/git title=git>git
 </a><a href=/icer/tags/html title=html>html
+</a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
 </a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/icjj><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/ICJJ><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
