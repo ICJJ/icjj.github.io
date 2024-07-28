@@ -5,18 +5,18 @@
 <span class=icon-bar></span>
 <span class=icon-bar></span>
 </button>
-<a class=navbar-brand href=/icer>ICJJ Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/icer>Posts</a></li><li><a href=/icer/categories/bus/>bus</a></li><li><a href=/icer/categories/tips/>tips</a></li><li><a href=/icer/archive/>ARCHIVE</a></li><li><a href=/icer/about/>ABOUT</a></li><li><a href=/icer/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/icer/img/site/%e5%b0%8f%e7%b1%b3%e6%b1%bd%e8%bd%a6/%e5%8e%9f%e5%9e%8b%e8%bd%a6%e5%a3%81%e7%ba%b8/2880x1280/2880x1280-08.png)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/amba5 title=AMBA5>AMBA5
+<a class=navbar-brand href=/icer>ICJJ Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/icer>Posts</a></li><li><a href=/icer/categories/bus/>bus</a></li><li><a href=/icer/categories/tech/>tech</a></li><li><a href=/icer/categories/tips/>tips</a></li><li><a href=/icer/archive/>ARCHIVE</a></li><li><a href=/icer/about/>ABOUT</a></li><li><a href=/icer/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/icer/img/site/%e5%b0%8f%e7%b1%b3%e6%b1%bd%e8%bd%a6/%e5%8e%9f%e5%9e%8b%e8%bd%a6%e5%a3%81%e7%ba%b8/2880x1280/2880x1280-08.png)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/amba5 title=AMBA5>AMBA5
 </a><a class=tag href=/tags/ahb title=AHB>AHB
 </a><a class=tag href=/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译</a></div><h1>AMBA5-AHB-知识提纲</h1><h2 class=subheading></h2><span class=meta>Posted by
 程建军
 on
 Tuesday, April 23, 2024</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
 col-md-10 col-md-offset-1
-post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=amba5-ahb-知识提纲-1>AMBA5-AHB-知识提纲</h2><h3 id=a-id1-ahb基本知识1-ahb基本知识a><a id="1 ahb基本知识">1 ahb基本知识</a></h3><details><summary><strong>[点击展开]1个主机3个从机的结构框图</strong></summary><pre><code>
+post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=amba5-ahb-知识提纲-1>AMBA5-AHB-知识提纲</h2><h3 id=a-id1-ahb基本知识1-ahb基本知识a><a id="1 ahb基本知识">1 ahb基本知识</a></h3><details><summary><strong>1.1 1个主机3个从机的结构框图[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_1-1_AHB_block_diagram.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]主机接口框图</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>1.2 主机接口框图[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_1-2_%e4%b8%bb%e6%9c%ba_interface.png alt>
-	</code></pre></details><details><summary><strong>[点击展开]主机信号</strong></summary><pre><code>
+	</code></pre></details><details><summary><strong>1.3 主机信号[点击展开]</strong></summary><pre><code>
 输入：
 	全局信号：HRESETn、HCLK
 	传输响应：HREADY、HRESP
@@ -24,9 +24,9 @@ post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=
 输出：
 	地址和控制信号：HADDR[31:0]、HWRITE、HSIZE[2:0]、HTRANS[]、HBURST、HPROT、HMASTLOCK
 	写数据：HWDATA
-    </code></pre></details><details><summary><strong>[点击展开]从机接口框图</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>1.4 从机接口框图[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_1-2_%e4%b8%bb%e6%9c%ba_interface.png alt>
-	</code></pre></details><details><summary><strong>[点击展开]从机信号</strong></summary><pre><code>
+	</code></pre></details><details><summary><strong>1.5 从机信号[点击展开]</strong></summary><pre><code>
 输入：
 	全局信号：HRESETn、HCLK
 	选择信号：HSELx
@@ -35,24 +35,71 @@ post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=
 输出：
 	传输响应：HREADYOUT、HRESP
 	读数据信号：HRDATA
-    </code></pre></details><details><summary><strong>[点击展开]ahb 的传输类型</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>1.6 ahb 的传输类型[点击展开]</strong></summary><pre><code>
 普通传输：single
 突发传输：
 	地址边界不回环的增量突发传输，incr4，incr8，incr16；
 	地址边界回环的回环突发传输，wrap4，wrap8，wrap16；
-    </code></pre></details><h3 id=a-id2-ahb-基本时序图2-ahb-基本时序图a><a id="2 ahb 基本时序图">2 ahb 基本时序图</a></h3><details><summary><strong>[点击展开]没有等待的读传输</strong></summary><pre><code>
+    </code></pre></details><h3 id=a-id2-ahb-基本时序图2-ahb-基本时序图a><a id="2 ahb 基本时序图">2 ahb 基本时序图</a></h3><details><summary><strong>2.1 没有等待的读传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-1_Read_transfer.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]没有等待的写传输</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>2.2 没有等待的写传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-2_Write_transfer.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]带两个等待周期的读传输</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>2.3 带两个等待周期的读传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-3_Read_transfer_with_two_wait_states.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]带一个等待周期的写传输</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>2.4 带一个等待周期的写传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-4_Write_transfer_with_one_wait_state.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]四种传输类型示例</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>2.5 四种传输类型示例[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-6_Transfer_type_examples.png alt>
-    </code></pre></details><details><summary><strong>[点击展开]锁定传输</strong></summary><pre><code>
+    </code></pre></details><details><summary><strong>2.6 锁定传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-7_Locked_transfer.png alt>
-    </code></pre></details><h3 id=a-id3-碎片化知识点3-碎片化知识点a><a id="3 碎片化知识点">3 碎片化知识点</a></h3><ol><li>只有未定义长度的突发传输可以将BUSY传输作为突发传输的最后一个周期；</li><li>SINGLE突发传输之后，不允许立即执行BUSY传输，可以跟随IDLE或者NONSEQ传输；</li></ol><hr><ul class=pager><li class=previous><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>&larr;
+    </code></pre></details><details><summary><strong>2.7 WRAP4 一拍等待字写传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-8_Four-beat_wrapping_burst.png alt>
+    </code></pre></details><details><summary><strong>2.8 INCR4 一拍等待字读传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-9_Four-beat_incrementing_burst.png alt>
+    </code></pre></details><details><summary><strong>2.9 WRAP8 字读传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-10_Eight-beat_wrapping_burst.png alt>
+    </code></pre></details><details><summary><strong>2.10 INCR8 字写传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-11_Eight-beat_incrementing_burst.png alt>
+    </code></pre></details><details><summary><strong>2.11 INCR 半字写和字读传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-12_Undefined_length_bursts.png alt>
+    </code></pre></details><h3 id=a-id3-零碎知识点3-零碎知识点a><a id="3 零碎知识点">3 零碎知识点</a></h3><ol><li>只有连续传输<strong>HBURST</strong>为[INCR、WRAP4-16、INCR4-16]的最后一个周期可以将<strong>HTRANS</strong>设为BUSY；</li><li>所有传输的第一个周期<strong>HTRANS</strong>只能是NONSEQ、IDLE。</li><li><strong>HBURST</strong>为SINGLE的传输之后，只能跟随<strong>HTRANS</strong>为[IDLE、NONSEQ]的传输；</li><li>只有<strong>HTRANS</strong>为 NONSEQ和SEQ才能读写数据；</li><li><strong>HRESP</strong>为ERROR只会在传输的最后两个周期；</li></ol><details><summary><strong>3.1 突发传输终止的条件[点击展开]</strong></summary><pre><code>
+1. 从机发出拉低<strong>HRESP</strong>信号发出ERROR响应；
+2. 多主机系统中互联组件终止当前传输，将传输权限转交给其他主机。
+	</code></pre></details><details><summary><strong>3.2 等待状态中改变传输类型的情况[点击展开]</strong></summary><pre><code>
+只能更改一次
+1. <strong>HTRANS</strong>为IDLE的传输；
+2. <strong>HTRANS</strong>为BUSY的传输；
+    </code></pre></details><details><summary><strong>3.3 等待状态中改变地址的情况[点击展开]</strong></summary><pre><code>
+只能更改一次
+1. <strong>HTRANS</strong>为IDLE的传输；
+2. <strong>HRESP</strong>为ERROR之后；
+    </code></pre></details><details><summary><strong>3.4 HPROT的功能[点击展开]</strong></summary><pre><code>
+HPROT[0]：指令还是数据访问；
+HPROT[1]：用户还是特权访问；
+HPROT[2]：不可缓冲还是可以；
+HPROT[3]：不可改变还是可以；
+HPROT[4]：不可查找还是可以；
+HPROT[5]：不可分配还是可以；
+HPROT[6]：不可共享还是可以；
+    </code></pre></details><details><summary><strong>3.5 三种传输响应[点击展开]</strong></summary><pre><code>
+1. 成功完成：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为LOW。
+2. 失败完成
+   第一拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为LOW。
+   第二拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为HIGH。
+3. 延迟传输：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为HIGH。
+    </code></pre></details><details><summary><strong>3.6 独占传输的步骤[点击展开]</strong></summary><pre><code>
+1. 对地址A执行独占读取；
+2. 根据独占读取的值计算一个新的值，作为独占写入的值；
+3. 对地址A执行独占写入；
+4. 对同一地址两次独占操作之间不允许插入其他主机的独占写入，否则失败；
+    </code></pre></details><details><summary><strong>3.7 独占传输<strong>HEXOKAY</strong>失败的可能[点击展开]</strong></summary><pre><code>
+1. 传输位置不支持独占传输；
+2. 独占传输期间有其他独占传输写入成功；
+    </code></pre></details><details><summary><strong>3.8 独占传输限制[点击展开]</strong></summary><pre><code>
+1. 必须是单一的传输<strong>HBURST</strong>为[SINGLE、INCR]；
+2. 不得包含busy传输；
+3. 地址必须与HSIZE指示的数据大小对齐；
+    </code></pre></details><hr><ul class=pager><li class=previous><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/amba5-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=AMBA5-AHB-协议翻译>Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
@@ -67,7 +114,9 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/git title=git>git
 </a><a href=/icer/tags/html title=html>html
 </a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
-</a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+</a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译
+</a><a href=/icer/tags/%E5%A4%A7%E5%B0%8F%E7%AB%AF title=大小端>大小端
+</a><a href=/icer/tags/%E5%AD%97%E8%8A%82%E5%BA%8F title=字节序>字节序</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/icjj><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/ICJJ><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fab fa-gitlab fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://stackoverflow.com/users/26381389><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
