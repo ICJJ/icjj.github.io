@@ -18,28 +18,28 @@ post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_1-2_%e4%b8%bb%e6%9c%ba_interface.png alt>
 	</code></pre></details><details><summary><strong>1.3 主机信号[点击展开]</strong></summary><pre><code>
 输入：
-	全局信号：HRESETn、HCLK
-	传输响应：HREADY、HRESP
-	读数据：HRDATA
+  全局信号：HRESETn、HCLK
+  传输响应：HREADY、HRESP
+  读数据：HRDATA
 输出：
-	地址和控制信号：HADDR[31:0]、HWRITE、HSIZE[2:0]、HTRANS[]、HBURST、HPROT、HMASTLOCK
-	写数据：HWDATA
+  地址和控制信号：HADDR[31:0]、HWRITE、HSIZE[2:0]、HTRANS[]、HBURST、HPROT、HMASTLOCK
+  写数据：HWDATA
     </code></pre></details><details><summary><strong>1.4 从机接口框图[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_1-2_%e4%b8%bb%e6%9c%ba_interface.png alt>
 	</code></pre></details><details><summary><strong>1.5 从机信号[点击展开]</strong></summary><pre><code>
 输入：
-	全局信号：HRESETn、HCLK
-	选择信号：HSELx
-	地址和控制信号：HADDR[31:0]、HWRITE、HSIZE[2:0]、HBURST[2:0]、HTRANS[1:0]、HPROT[3:0]、HMASTLOCK、HREADY
-	写数据信号：HWDATA[31:0]
+  全局信号：HRESETn、HCLK
+  选择信号：HSELx
+  地址和控制信号：HADDR[31:0]、HWRITE、HSIZE[2:0]、HBURST[2:0]、HTRANS[1:0]、HPROT[3:0]、HMASTLOCK、HREADY
+  写数据信号：HWDATA[31:0]
 输出：
-	传输响应：HREADYOUT、HRESP
-	读数据信号：HRDATA
+  传输响应：HREADYOUT、HRESP
+  读数据信号：HRDATA
     </code></pre></details><details><summary><strong>1.6 ahb 的传输类型[点击展开]</strong></summary><pre><code>
 普通传输：single
 突发传输：
-	地址边界不回环的增量突发传输，incr4，incr8，incr16；
-	地址边界回环的回环突发传输，wrap4，wrap8，wrap16；
+  地址边界不回环的增量突发传输，incr4，incr8，incr16；
+  地址边界回环的回环突发传输，wrap4，wrap8，wrap16；
     </code></pre></details><h3 id=a-id2-ahb-基本时序图2-ahb-基本时序图a><a id="2 ahb 基本时序图">2 ahb 基本时序图</a></h3><details><summary><strong>2.1 没有等待的读传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-1_Read_transfer.png alt>
     </code></pre></details><details><summary><strong>2.2 没有等待的写传输[点击展开]</strong></summary><pre><code>
