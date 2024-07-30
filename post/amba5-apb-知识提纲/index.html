@@ -1,4 +1,4 @@
-<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="ICJJ Blog"><meta property="og:type" content="article"><meta property="og:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-09.png"><meta property="twitter:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-09.png"><meta name=title content="AMBA5-APB-知识提纲"><meta property="og:title" content="AMBA5-APB-知识提纲"><meta property="twitter:title" content="AMBA5-APB-知识提纲"><meta name=description content="AMBA5 APB的一些重要的点"><meta property="og:description" content="AMBA5 APB的一些重要的点"><meta property="twitter:description" content="AMBA5 APB的一些重要的点"><meta property="twitter:card" content="summary"><meta name=keyword content="程建军, chengjianjun, ChengJianjun, , 程建军的网络日志, 程建军的博客, ChengJianjun Blog, 博客, 个人网站, AMBA, FPGA, SPINALHDL, PCIE"><link rel="shortcut icon" href=/icer/img/site/favicon.ico><title>AMBA5-APB-知识提纲 | 程建军的博客 | ChengJianjun Blog</title>
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="ICJJ Blog"><meta property="og:type" content="article"><meta property="og:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-09.png"><meta property="twitter:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-09.png"><meta name=title content="AMBA5 APB 知识提纲"><meta property="og:title" content="AMBA5 APB 知识提纲"><meta property="twitter:title" content="AMBA5 APB 知识提纲"><meta name=description content="AMBA5 APB的一些重要的点"><meta property="og:description" content="AMBA5 APB的一些重要的点"><meta property="twitter:description" content="AMBA5 APB的一些重要的点"><meta property="twitter:card" content="summary"><meta name=keyword content="程建军, chengjianjun, ChengJianjun, , 程建军的网络日志, 程建军的博客, ChengJianjun Blog, 博客, 个人网站, AMBA, FPGA, SPINALHDL, PCIE"><link rel="shortcut icon" href=/icer/img/site/favicon.ico><title>AMBA5 APB 知识提纲 | 程建军的博客 | ChengJianjun Blog</title>
 <link rel=canonical href=/icer/post/amba5-apb-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/><link rel=stylesheet href=/icer/css/bootstrap.min.css><link rel=stylesheet href=/icer/css/hugo-theme-cleanwhite.min.css><link rel=stylesheet href=/icer/css/zanshang.css><link rel=stylesheet href=/icer/css/font-awesome.all.min.css><script src=/icer/js/jquery.min.js></script><script src=/icer/js/bootstrap.min.js></script><script src=/icer/js/hux-blog.min.js></script><script src=/icer/js/lazysizes.min.js></script></head><script async src="https://www.googletagmanager.com/gtag/js?id=G-FWR2FVFK68"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-FWR2FVFK68")}</script><nav class="navbar navbar-default navbar-custom navbar-fixed-top"><div class=container-fluid><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
 <span class=sr-only>Toggle navigation</span>
 <span class=icon-bar></span>
@@ -7,7 +7,7 @@
 </button>
 <a class=navbar-brand href=/icer>ICJJ Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/icer>Posts</a></li><li><a href=/icer/categories/bus/>bus</a></li><li><a href=/icer/categories/tech/>tech</a></li><li><a href=/icer/categories/tips/>tips</a></li><li><a href=/icer/archive/>ARCHIVE</a></li><li><a href=/icer/about/>ABOUT</a></li><li><a href=/icer/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/icer/img/site/%e5%b0%8f%e7%b1%b3%e6%b1%bd%e8%bd%a6/%e5%8e%9f%e5%9e%8b%e8%bd%a6%e5%a3%81%e7%ba%b8/2880x1280/2880x1280-09.png)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/amba5 title=AMBA5>AMBA5
 </a><a class=tag href=/tags/apb title=APB>APB
-</a><a class=tag href=/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译</a></div><h1>AMBA5-APB-知识提纲</h1><h2 class=subheading></h2><span class=meta>Posted by
+</a><a class=tag href=/tags/%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2 title=知识提纲>知识提纲</a></div><h1>AMBA5 APB 知识提纲</h1><h2 class=subheading></h2><span class=meta>Posted by
 程建军
 on
 Tuesday, April 23, 2024</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
@@ -33,8 +33,31 @@ post-container"><h1 id=amba5-apb-知识提纲>AMBA5-APB-知识提纲</h1><h2 id=
 输出：
   传输响应：<strong>PREADY</strong>、<strong>PSLVERR</strong>
   读数据信号：<strong>PRDATA</strong>
-    </code></pre></details><h3 id=a-id2-apb节基本时序图1-apb基本时序图a><a id="2 apb节基本时序图">1 APB基本时序图</a></h3><h3 id=a-id3-apb零碎知识点3-apb零碎知识点a><a id="3 apb零碎知识点">3 APB零碎知识点</a></h3><hr><ul class=pager><li class=previous><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>&larr;
-Previous Post</a></li><li class=next><a href=/icer/post/amba5-ahb-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/ data-toggle=tooltip data-placement=top title=AMBA5-AHB-知识提纲>Next
+    </code></pre></details><h3 id=a-id2-apb节基本时序图1-apb基本时序图a><a id="2 apb节基本时序图">1 APB基本时序图</a></h3><details><summary><strong>2.1 无等待写传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-1_Write_transfer_with_no_wait_states.png alt>
+    </code></pre></details><details><summary><strong>2.2 两个周期等待写传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-2_Write_transfer_with_wait_states.png alt>
+    </code></pre></details><details><summary><strong>2.3 无等待读传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-3_Read_transfer_with_no_wait_states.png alt>
+    </code></pre></details><details><summary><strong>2.4 两个周期等待读传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-4_Read_transfer_with_wait_states.png alt>
+    </code></pre></details><details><summary><strong>2.5 失败的写入传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-6_Example_failing_write_transfer.png alt>
+    </code></pre></details><details><summary><strong>2.7 失败的读取传输[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_3-6_Example_failing_read_transfer.png alt>
+    </code></pre></details><h3 id=a-id3-apb零碎知识点3-apb零碎知识点a><a id="3 apb零碎知识点">3 APB零碎知识点</a></h3><ol><li><strong>PSLVERR</strong>只在最后一个周期有效。</li><li>三种保护类型<details><summary><strong>保护类型[点击展开]</strong></summary><pre><code>
+ 1. PPROT[0]：普通访问和特权访问
+ 2. PPROT[1]：安全访问和非安全访问
+ 3. PPROT[2]：数据访问和指令访问
+     </code></pre></details></li><li><strong>PNSE</strong>和<strong>PPROT[1]</strong>组成的几种物理地址空间：<details><summary><strong>物理地址空间[点击展开]</strong></summary><pre><code>
+  1. 0b00：安全空间
+  2. 0b01：非安全空间
+  3. 0b10：Root空间
+  4. 0b11：Realm空间
+     </code></pre></details></li><li>apb传输的状态机跳转<details><summary><strong>APB状态机[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/apb/Figure_4-1_State_diagram.png alt>
+     </code></pre></details></li></ol><hr><ul class=pager><li class=previous><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>&larr;
+Previous Post</a></li><li class=next><a href=/icer/post/amba5-ahb-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/ data-toggle=tooltip data-placement=top title="AMBA5 AHB 知识提纲">Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
 sidebar-container
@@ -50,7 +73,8 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
 </a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译
 </a><a href=/icer/tags/%E5%A4%A7%E5%B0%8F%E7%AB%AF title=大小端>大小端
-</a><a href=/icer/tags/%E5%AD%97%E8%8A%82%E5%BA%8F title=字节序>字节序</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+</a><a href=/icer/tags/%E5%AD%97%E8%8A%82%E5%BA%8F title=字节序>字节序
+</a><a href=/icer/tags/%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2 title=知识提纲>知识提纲</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/icjj><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/ICJJ><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
 <i class="fab fa-gitlab fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://stackoverflow.com/users/26381389><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
