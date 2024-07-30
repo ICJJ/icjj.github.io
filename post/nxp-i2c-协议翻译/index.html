@@ -1,0 +1,166 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="ICJJ Blog"><meta property="og:type" content="article"><meta property="og:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-05.png"><meta property="twitter:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-05.png"><meta name=title content="NXP I2C 协议翻译"><meta property="og:title" content="NXP I2C 协议翻译"><meta property="twitter:title" content="NXP I2C 协议翻译"><meta name=description content="NXP I2C的协议翻译"><meta property="og:description" content="NXP I2C的协议翻译"><meta property="twitter:description" content="NXP I2C的协议翻译"><meta property="twitter:card" content="summary"><meta name=keyword content="程建军, chengjianjun, ChengJianjun, , 程建军的网络日志, 程建军的博客, ChengJianjun Blog, 博客, 个人网站, AMBA, FPGA, SPINALHDL, PCIE"><link rel="shortcut icon" href=/icer/img/site/favicon.ico><title>NXP I2C 协议翻译 | 程建军的博客 | ChengJianjun Blog</title>
+<link rel=canonical href=/icer/post/nxp-i2c-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/><link rel=stylesheet href=/icer/css/bootstrap.min.css><link rel=stylesheet href=/icer/css/hugo-theme-cleanwhite.min.css><link rel=stylesheet href=/icer/css/zanshang.css><link rel=stylesheet href=/icer/css/font-awesome.all.min.css><script src=/icer/js/jquery.min.js></script><script src=/icer/js/bootstrap.min.js></script><script src=/icer/js/hux-blog.min.js></script><script src=/icer/js/lazysizes.min.js></script></head><script async src="https://www.googletagmanager.com/gtag/js?id=G-FWR2FVFK68"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-FWR2FVFK68")}</script><nav class="navbar navbar-default navbar-custom navbar-fixed-top"><div class=container-fluid><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+</button>
+<a class=navbar-brand href=/icer>ICJJ Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/icer>Posts</a></li><li><a href=/icer/categories/bus/>bus</a></li><li><a href=/icer/categories/tech/>tech</a></li><li><a href=/icer/categories/tips/>tips</a></li><li><a href=/icer/archive/>ARCHIVE</a></li><li><a href=/icer/about/>ABOUT</a></li><li><a href=/icer/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/icer/img/site/%e5%b0%8f%e7%b1%b3%e6%b1%bd%e8%bd%a6/%e5%8e%9f%e5%9e%8b%e8%bd%a6%e5%a3%81%e7%ba%b8/2880x1280/2880x1280-05.png)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/nxp title=NXP>NXP
+</a><a class=tag href=/tags/i2c title=I2C>I2C
+</a><a class=tag href=/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译</a></div><h1>NXP I2C 协议翻译</h1><h2 class=subheading></h2><span class=meta>Posted by
+程建军
+on
+Tuesday, April 23, 2024</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+post-container"><h1 id=nxp-i2c协议翻译>NXP I2C协议翻译</h1><h2 id=i2c-总线规范和用户手册翻译>I2C 总线规范和用户手册翻译</h2><blockquote><p><a href=https://icjj.github.io/icer/document/UM10204.pdf>UM10204.pdf</a></p></blockquote><p>文档信息</p><ul><li><p>keywords：</br>I2C, I2C-bus, Standard-mode, Fast-mode, Fast-mode Plus, Fm+, UltraFast-mode,
+UFm, High Speed, Hs, inter-IC, SDA, SCL, USDA, USCL</p></li><li><p>摘要：</br>飞利浦半导体（现为恩智浦半导体）开发了一种简单的双向2线总线，用于高效的芯片间控制，称为芯片间总线或I2C总线。
+只需要两条总线线：一条串行数据线（SDA）和一条串行时钟线（SCL）。
+在标准模式下，可以以高达100 kbit/s的速度进行串行8位导向的双向数据传输。
+在快速模式下可达到400 kbit/s，在快速模式增强（Fm+）下可达到1 Mbit/s，或者在高速模式下可达到3.4 Mbit/s。
+超快速模式是一种单向模式，数据传输速度可高达5 Mbit/s。</p></li></ul><p><a id="表 1">表 1</a> 版本历史</p><table><thead><tr><th>版本</th><th>时间</th><th>描述</th></tr></thead><tbody><tr><td>Original</td><td>1982</td><td>初次发布。</td></tr><tr><td>v1.0</td><td>1992</td><td>I2C版本1.0。</td></tr><tr><td>v2.0</td><td>1998</td><td>I2C总线已成为一种事实上的世界标准，目前在超过1000种不同的集成电路中实施，并已授权给50多家公司。然而，今天的许多应用需要<strong>更高的总线速度和更低的供电电压</strong>。这一更新版本的I2C总线规范满足了这些要求</td></tr><tr><td>v2.1</td><td>2000</td><td>I2C版本2.1。</td></tr><tr><td>v3.0</td><td>20070619</td><td>许多现代应用程序需要更长的总线和/或更快的速度。为了满足这一需求，推出了<strong>快速模式增强版（Fast-mode Plus）</strong>，它通过提高多达10倍的驱动强度并将数据速率提高到1 Mbit/s，同时保持向下兼容<strong>快速模式（Fast-mode）</strong>和<strong>标准模式（Standard-mode）</strong>的速度和软件命令。</td></tr><tr><td>v4.0</td><td>20120213</td><td>I2C版本4.0。</td></tr><tr><td>v5.0</td><td>20121009</td><td>I2C版本5.0。</td></tr><tr><td>v6.0</td><td>20140404</td><td>I2C版本6.0。</br>重新计算了 <em><a href="#图 4.1">图 4.1</a></em> 和 <em><a href="#图 4.2">图 4.2</a></em> 。</td></tr><tr><td>v7.0</td><td>20211001</td><td>I2C版本7.0.</br>更新了 <em><a href="#表 5">表 5</a></em> 。</br>将这个文档的“master/slave”更新为“controller/target”以符合MIPI I3C规范和NXP的包容性语言项目。</br>增加了 <em><a href="#第9章 mipi i3c">第9章 MIPI i3c</a></em></td></tr></tbody></table><p>本规范包含了以下章节：</p><ul><li><em><a href="#第1章 介绍">第1章 介绍</a></em></li><li><em><a href="#第2章 i2c总线功能">第2章 I2C总线功能</a></em></li><li><em><a href="#第3章 i2c总线协议">第3章 I2C总线协议</a></em></li><li><em><a href="#第4章 i2c总线协议的其他用途">第4章 I2C总线协议的其他用途</a></em></li><li><em><a href="#第5章 i2c总线速度">第5章 I2C总线速度</a></em></li><li><em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em></li><li><em><a href="#第7章 i2c总线设备的电气连接到总线线路">第7章 I2C总线设备的电气连接到总线线路</a></em></li><li><em><a href="#第8章 缩写">第8章 缩写</a></em></li><li><em><a href="#第9章 mipi i3c概述">第9章 MIPI I3C概述</a></em></li><li><em><a href="#第10章 法律信息">第10章 法律信息</a></em></li><li><em><a href=#表格>表格</a></em></li><li><em><a href=#功能>功能</a></em></li><li><em><a href=#内容>内容</a></em></li></ul><h3 id=a-id第1章-介绍第1章-介绍a><a id="第1章 介绍">第1章 介绍</a></h3><p>I2C总线是一个世界标准的总线，目前已在超过1000种由50多家公司生产的不同集成电路中实施。
+此外，通用I2C总线还用于各种控制架构，
+如系统管理总线( System Management Bus - SMBus)、
+电源管理总线(Power Management Bus - PMBus)、
+智能平台管理接口(Intelligent Platform Management Interface - IPMI)、
+显示数据通道( Display Data Channel - DDC)和
+先进电信计算架构(Advanced Telecom Computing Architecture - ATCA)。</p><p>本文帮助设备和系统设计师理解I2C总线的工作原理，并实现一个可行的应用程序。
+描述了各种操作模式。它包含了对I2C总线数据传输、握手和总线仲裁方案的全面介绍。
+细节部分涵盖了I2C总线在其每种操作模式下的时序要求和电气规格。</p><p>I2C兼容芯片的设计师应该将本文档作为参考，并确保新设备满足本文档中规定的所有限制。
+包含I2C设备的系统设计师应审查本文档，并参考各个组件的数据手册。</p><p>寻求开发基于I2C解决方案的读者也可能对I3C感兴趣，I3C由MIPI联盟于2017年推出，并得到了NXP的参与和贡献。
+MIPI I3C提供了与I2C的向后兼容性，具有更高的速度和更低的功耗，并且为实施者提供了无 royalties 的版本。
+更多信息请见 <em><a href="#第9章 mipi i3c概述">第9章 MIPI I3C概述</a></em>。</p><h3 id=a-id第2章-i2c总线功能第2章-i2c总线功能a><a id="第2章 i2c总线功能">第2章 I2C总线功能</a></h3><p>在消费电子、电信和工业电子领域，似乎不相关的设计之间常常有许多相似之处。例如，几乎每个系统都包括：</p><ul><li>智能控制，通常是单片微控制器</li><li>通用电路，如LCD和LED驱动器、远程I/O端口、RAM、EEPROM、RTC时钟或A/D和D/A转换器</li><li>应用导向电路，如无线电和视频系统的数字调谐和信号处理电路、温度传感器和智能卡。</li></ul><p>为了利用这些相似性来造福系统设计师和设备制造商，并最大化硬件效率和电路简单性，
+飞利浦半导体（现为 NXP 半导体）开发了一种简单的双向两线总线，用于IC间高效控制。
+这种总线被称为I2C或I2C总线。所有与I2C总线兼容的设备都包含一个片上接口，使它们能够通过I2C总线直接相互通信。
+这种设计概念解决了在设计数字控制电路时遇到的许多接口问题。</p><p>以下是 I2C 总线的一些特性：</p><ul><li>只需两个总线；一条串行数据线（serial data - SDA）和一条串行时钟线（serial clock - SCL）。</li><li>连接到总线的每个设备都可以通过唯一地址进行软件寻址，并且在任何时候都存在简单的主从机关系；
+主机可以作为主机发送端或从机接收器端。</li><li>它是一个真正的多控制器总线，包括冲突检测和仲裁，以防止在两个或多个控制器同时发起数据传输时数据损坏。</li><li>串行、8位导向的双向数据传输有多重传输速度：<ul><li>标准模式下可达到100 kbit/s，</li><li>在快速模式下可达到400 kbit/s，</li><li>在快速模式加强版中可达到1 Mbit/s，</li><li>在高速模式下可达到3.4 Mbit/s。</li><li>在超快速模式下可达到5 Mbit/s。</li></ul></li><li>片上滤波器可以抑制总线数据线上的尖峰，以保持数据完整性。</li><li>可连接到同一总线的IC数量仅受最大总线电容的限制。在某些条件下可能允许更大的电容。请参阅 <em><a href="#7.2 超出最大允许电容运行">7.2 超出最大允许电容运行</a></em> 。</li></ul><p><em><a href="#图 1">图 1</a></em> 显示了I2C总线应用的示例。</p><p><a id="图 1">图 1
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_1._Example_of_I2C-bus_applications.png alt></a></p><h4 id=a-id12-设计优势12-设计优势a><a id="1.2 设计优势">1.2 设计优势</a></h4><p>I2C总线兼容的电路让系统设计能够迅速从功能框图转向原型。
+此外，由于它们直接嵌入在I2C总线上，不需要任何额外的外部接口，
+它们允许原型系统通过简单地嵌入或非嵌入行为电路来修改或升级。
+以下是一些I2C总线兼容电路对设计师特别有吸引力的特点：</p><ul><li>功能块在框图上的对应实际的电路；设计可以迅速从框图转向最终原理图。</li><li>不需要设计总线接口，因为I2C总线接口已经集成在芯片上。</li><li>集成地址和数据传输协议允许系统完全基于软件定义。</li><li>相同的电路类型通常可以用于许多不同的应用。</li><li>设计时间减少，因为设计师迅速熟悉I2C总线兼容IC所代表的常用功能模块</li><li>电路可以在不影响总线上其他电路的情况下添加或移除。</li><li>故障诊断和调试简单；故障可以立即追踪。</li><li>通过组装可重用软件模块的库，可以减少软件开发时间。</li></ul><p>除了这些优点，
+I2C总线兼容范围内的CMOS电路为设计师提供了特别适合便携设备和电池供电系统的特殊功能。<br>它们都具有：</p><ul><li>极低的电流消耗。</li><li>高抗噪声能力。</li><li>宽供电电压范围。</li><li>宽工作温度范围。</li></ul><h4 id=a-id12-制造优势12-制造优势a><a id="1.2 制造优势">1.2 制造优势</a></h4><p>I2C总线兼容的电路不仅帮助设计师，它们还给设备制造商带来广泛的好处，因为：</p><ul><li>简单的2线串行I2C总线最小化了互连，因此集成电路的引脚更少，PCB走线也没有那么多；
+这样的结果就是——更小且更便宜的PCB。</li><li>完全集成的I2C总线协议消除了对地址解码器和其他“粘合逻辑”的需求。</li><li>I2C总线的多控制器能力允许通过与生产线的外部连接快速测试和校准终端设备。</li><li>各种无引脚封装中可用的I2C总线兼容电路进一步减少了空间需求。</li></ul><p>这些只是一些好处。
+此外，I2C总线兼容的电路通过允许简单构建设备变体和易于升级模型来保持设计的最新性， 从而增加了系统设计的灵活性。
+通过这种方式，可以围绕基本模型开发整个设备系列。
+新设备或增强功能型号（即扩展内存、遥控等）的升级可以通过简单地将适当的集成电路嵌入在总线上来生产。
+如果需要更大的ROM，只需从我们全面的产品范围中选择一个具有更大ROM的微控制器即可。
+随着新的电路取代旧的电路，可以通过简单地将过时的电路从总线上卸下并更换新的电路来轻松为设备添加新功能或提高其性能。</p><h4 id=a-id13-ic设计优势13-ic设计优势a><a id="1.3 ic设计优势">1.3 IC设计优势</a></h4><p>微控制器的设计师常常面临保留输出引脚的压力。
+I2C协议允许连接各种外设，而无需单独的地址或芯片使能信号。
+此外，包含I2C接口的微控制器在市场上更具竞争力，因为有丰富的现有外设可供选择。</p><h3 id=a-id第3章-i2c总线协议第3章-i2c总线协议a><a id="第3章 i2c总线协议">第3章 I2C总线协议</a></h3><h4 id=a-id31-标准模式快速模式和快速模式增强版的i2c总线协议31-标准模式快速模式和快速模式增强版的i2c总线协议a><a id="3.1 标准模式、快速模式和快速模式增强版的I2C总线协议">3.1 标准模式、快速模式、和快速模式增强版的I2C总线协议</a></h4><p>串行数据(SDA)和串行时钟(SCL)在连接到总线的设备之间传递信息。
+每个设备都有一个唯一的地址（无论它是微控制器、LCD驱动器、内存还是键盘接口），
+并且可以根据设备的功能，作为发送器或接收器工作。LCD驱动器可能仅作为接收器，而内存既可以接收数据也可以发送数据。
+除了发送器和接收器，设备在进行数据传输时也可以被视为主机或从机（见 <em><a href="#表 2">表 2</a></em> ）。
+主机是发起总线上数据传输的设备，并生成时钟信号以允许该传输。
+在此时，任何被寻址的设备都被视为从机。</p><p><a id="表 2">表 2</a> I2C总线术语描述</p><table><thead><tr><th>术语</th><th>描述</th></tr></thead><tbody><tr><td>发送端</td><td>这个设备将数据发送到总线上。</td></tr><tr><td>接收端</td><td>这个设备从总线上接收数据。</td></tr><tr><td>主机（Controller）</td><td>这个设备主动发起传输，产生时钟以及终止传输</td></tr><tr><td>从机（Target）</td><td>这个设备由主机进行控制</td></tr><tr><td>多主机</td><td>多个控制器可以尝试同时控制总线而不会破坏信息。</td></tr><tr><td>仲裁</td><td>确保如果多个控制器同时尝试控制总线，则只允许一个控制器进行控制，并且传输消息不被损坏的程序。</td></tr><tr><td>同步</td><td>同步两个或更多设备时钟信号的程序。</td></tr></tbody></table><p>I2C总线是一个多主机总线。
+这意味着可以连接多个能够控制总线的设备。
+由于主机通常是微控制器，<em><a href="#图 2">图 2</a></em> 考虑了两个连接到I2C总线的微控制器之间数据传输的情况。</p><p><a id="图 2">图 2
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_2._Example_of_an_I2C-bus_configuration_using_two_microcontrollers.png alt></a></p><p>这个例子突出了在I2C总线上的主机-从机和接收端-发送端关系。
+请注意，这些关系不是永久的，而是仅取决于当时的数据传输方向。数据传输将按照以下方式进行：</p><ol><li>假设微控制器A想要向微控制器B发送信息：<ul><li>微控制器A（主机）寻址微控制器B（从机）；</li><li>微控制器A（主机作为发送端）向微控制器B（从机作为接收端）发送数据；</li><li>微控制器A（主机）终止传输。</li></ul></li><li>如果微控制器A想要接收微控制器B的信息：<ul><li>微控制器A（主机）寻址微控制器B（从机）；</li><li>微控制器A（主机作为接收端）从微控制器B（从机作为发送端）接收数据。</li><li>微控制器A（主机）终止传输。</li></ul></li></ol><p>即使在这种情况下，主机（微控制器 A）也会生成时序并终止传输。</p><p>将多个微控制器连接到I2C总线意味着多个主机可能会试图同时发起数据传输。
+为避免随之而来的混乱，已经制定了一种仲裁程序。
+该程序依赖于所有I2C接口并通过I2C总线的线与连接。</p><p>如果两个或更多主机试图将信息放入总线，首先发送bit “1”的主机在另一个主机发送bit “0”时将输掉仲裁。
+在仲裁期间的时钟信号是由主机通过线与连接到<strong>SCL</strong>线生成时钟的同步组合（有关仲裁的更详细信息，
+请参见 <em><a href="#3.1.8 仲裁">3.1.8 仲裁</a></em> ）。</p><p>在I2C总线上生成时钟信号始终是主机设备的责任；每个主机在总线上传输数据时生成自己的时钟信号。
+来自主机的总线时钟信号仅在被慢速从机拉伸或在发生仲裁时由另一个主机占有时被改变。</p><p><em><a href="#表 3">表 3</a></em> 总结了I2C总线规格中强制和可选部分的使用情况以及哪些系统配置使用它们。</p><p><a id="表 3">表 3</a> I2C总线功能适用性</br>M = 强制的；O=可选的；n/a=不适用。</p><table><thead><tr><th>功能</th><th>配置：</br>单主机</th><th>配置：</br>多主机</th><th>配置：</br>从机<sup><em><a href=#[1]>[1]</a></em></sup></th></tr></thead><tbody><tr><td>START condition</td><td>M</td><td>M</td><td>M</td></tr><tr><td>STOP condition</td><td>M</td><td>M</td><td>M</td></tr><tr><td>Acknowledge</td><td>M</td><td>M</td><td>M</td></tr><tr><td>Synchronization</td><td>n/a</td><td>M</td><td>n/a</td></tr><tr><td>Arbitration</td><td>n/a</td><td>M</td><td>n/a</td></tr><tr><td>Clock stretching</td><td>O <sup><em><a href=#[2]>[2]</a></em></sup></td><td>O <sup><em><a href=#[2]>[2]</a></em></sup></td><td>O</td></tr><tr><td>7-bit target address</td><td>M</td><td>M</td><td>M</td></tr><tr><td>10-bit target address</td><td>O</td><td>O</td><td>O</td></tr><tr><td>General Call address</td><td>O</td><td>O</td><td>O</td></tr><tr><td>Software Reset</td><td>O</td><td>O</td><td>O</td></tr><tr><td>START byte</td><td>n/a</td><td>O <sup><em><a href=#[3]>[3]</a></em></sup></td><td>n/a</td></tr><tr><td>Device ID</td><td>n/a</td><td>n/a</td><td>O</td></tr></tbody></table><p><a id=[1]>[1]</a> :也指一个作为目标的控制器。</p><p><a id=[2]>[2]</a> :时钟拉伸是某些从机的一个特性。如果系统中没有从机可以拉伸时钟
+（保持<strong>SCL</strong>低），主机就不需要设计来处理这个程序。</p><p><a id=[3]>[3]</a> : “位翻转”（软件仿真）多主机系统应考虑一个启动字节，
+参见 <em><a href="#3.1.15 start byte">3.1.15 START Byte</a></em></p><h5 id=a-id311-sda和scl信号311-sda和scl信号a><a id="3.1.1 sda和scl信号">3.1.1 SDA和SCL信号</a></h5><p><strong>SDA</strong>和<strong>SCL</strong>都是双向线路，
+通过电流源或上拉电阻连接到正电源电压（见 <em><a href="#图 3">图 3</a></em> ）。
+当总线空闲时，两条线路都是高电平。连接到总线的设备输出级必须具有开漏 <sup><em><a href=#[4]>[4]</a></em> </sup>或开集电极 <sup><em><a href=#[5]>[5]</a></em> </sup>以执行线与功能。
+I2C总线上的数据可以在标准模式下以高达100 kbit/s的速度传输，在快速模式下以高达400 kbit/s的速度传输，
+在快速模式增强版下以高达1 Mbit/s的速度传输，或在高速模式下以高达3.4 Mbit/s的速度传输。
+总线电容限制了连接到总线的接口数量。</p><p>对于单个主机系统，如果总线上没有会拉伸时钟的设备，则控制器的<strong>SCL</strong>输出可以是推挽 <sup><em><a href=#[6]>[6]</a></em> </sup>驱动器设计。</p><p><a id=[4]>[4]</a> ：开漏（open-drain）配置依赖一个单一的场效应管（通常是nMOSFET）。
+当该晶体管导通时，输出引脚被拉至地（低电平），当其关闭时，输出引脚则处于浮空状态（未连接）。
+为了避免输出引脚在关闭时处于不确定状态，通常会通过上拉电阻将引脚拉至高电平。
+由于较强的电流能力、较低的导通电阻和较低的功耗常选用open-drain的方式驱动i2c。</p><p><a id=[5]>[5]</a> ：开集（open-collector）配置依赖一个单一的双极性晶体管（通常是BJT），
+当基极有电流时，开关导通，输出连接低电平；
+当基极没有电流时，开关关闭，输出悬空。
+在开关关闭时接上拉电阻将引脚接到高电平。本身无法提供源电流，需要外部电路提供。</p><p><a id=[6]>[6]</a> ：push-pull配置需要两个晶体管（MOSFET或BJT），一个用来将输出拉高（到电源电压），另一个用来将输出拉低（到地）。
+多主从结构，由于线与的仲裁机制，可能会损坏设备。只推荐在单主从结构中使用。</p><p><a id="图 3">图 3
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_3._Devices_with_various_supply_voltages_sharing_the_same_bus.png alt></a></p><h5 id=a-idsda和scl逻辑电平sda和scl逻辑电平a><a id=sda和scl逻辑电平>SDA和SCL逻辑电平</a></h5><p>由于连接到I2C总线不同技术设备（CMOS，NMOS，双极型）的多样性，逻辑‘0’（低）和‘1’（高）的电平不是固定的，而是依赖于VDD的相关电平。
+输入参考电平设置为VDD的30%和70%；VIL为0.3VDD，VIH为0.7VDD。请参见 <em><a href="#图 38">图 38</a></em> 的时序图。
+一些旧设备的输入电平固定为VIL = 1.5 V和VIH = 3.0 V，但所有新设备都要求采用此30%/70%的规范。
+有关电气规范，请参见 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em> 。</p><h5 id=a-id数据有效性数据有效性a><a id=数据有效性>数据有效性</a></h5><p>在时钟的高电平期间，<strong>SDA</strong>线上的数据必须保持稳定。
+数据线的高或低状态只能在SCL线上的时钟信号为低时改变（见 <em><a href="#图 4">图 4</a></em> ）。
+每传输一个数据位，都会生成一个时钟脉冲。</p><p><a id="图 4">图 4
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_4._Bit_transfer_on_the_I2C-bus.png alt></a></p><h5 id=a-id314-start和stop的条件314-start和stop的条件a><a id="3.1.4 start和stop的条件">3.1.4 START和STOP的条件</a></h5><p>所有事务都以START(S)开始，并以STOP(P)结束(见 <em><a href="#图 5">图 5</a></em> )。
+在<strong>SCL</strong>为高电平时，<strong>SDA</strong>线上的高到低的转换定义了START条件。
+在<strong>SCL</strong>为高电平时，<strong>SDA</strong>线上的低到高的转换定义了STOP条件。</p><p><a id="图 5">图 5
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_5._START_and_STOP_conditions.png alt></a></p><p>START和STOP条件始终由主机生成。
+在START条件之后，总线被视为繁忙状态。
+在STOP条件之后经过一定时间，总线再次被视为空闲状态。
+这个总线空闲情况在 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em> 中指定。</p><p>如果生成了重复的START（Sr）而不是STOP条件，则总线保持繁忙状态。
+在这方面，START（S）和重复的START（Sr）条件功能上是相同的。
+因此，在本文档的其余部分，S符号被用作通用术语来表示START和重复的START条件，除非Sr特别相关。</p><p>如果连接到总线的设备包含必要的接口硬件，则检测START和STOP条件很简单。
+然而，没有此类接口的微控制器必须至少每个时钟周期对<strong>SDA</strong>线进行两次采样以进行必要的强化采样。</p><h5 id=a-idbyte-格式byte-格式a><a id="byte 格式">Byte 格式</a></h5><p>每个传输在<strong>SDA</strong>线上的字节必须是8位长的。
+每次传输可以传输的字节数没有限制。
+每个字节后面必须跟一个确认位（ACK）。
+数据以最高有效位(MSB)优先的方式传输(见 <em><a href="#图 6">图 6</a></em> )。
+如果从机在执行某些其他功能之前无法接收或传输另一个完整的字节数据，例如处理内部中断，它可以将时钟线SCL保持在低电平，以迫使主机进入等待状态。
+当从机准备好接收另一个字节的数据并释放时钟线之后，数据传输将继续。</p><p><a id="图 6">图 6
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_6._Data_transfer_on_the_I2C-bus.png alt></a></p><h5 id=a-id316-ack和nack316-ack和nacka><a id="3.1.6 ack和nack">3.1.6 ACK和NACK</a></h5><p>确认信号在每个字节后发生。a确认位允许接收方向发送端发出信号，表示字节已成功接收，可以发送另一个字节。主机生成所有时钟脉冲，包括确认第九个时钟脉冲。</p><p>确认信号定义如下：</p><ul><li>发送端在确认时钟脉冲期间释放<strong>SDA</strong>线路，以便接收方可以将<strong>SDA</strong>线路拉低（发出ack信号），并在此时钟脉冲的高电平期间保持稳定的低电平（见 <em><a href="#图 4">图 4</a></em> ）。</li><li>还必须考虑设置时间和保持时间（在 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 i/o阶段和总线线路的电气规格及时序</a></em> 中规定）。</li><li>当<strong>SDA</strong>在第九个时钟脉冲期间保持高电平时，这被定义为nack信号。然后，主机可以生成STOP条件以中止传输，或生成START条件以开始新的传输。</li><li>有五种条件会导致nack信号的生成：<ol><li>在总线上没有具有所传输地址的从机，因此没有从机可以响应ack，<strong>SDA</strong>线默认保持高电平的nack响应。</li><li>从机无法接收或发送，因为它正在执行某些实时功能，尚未准备好与主机进行通信。</li><li>在传输过程中，接收方收到其无法理解的数据或命令。</li><li>在传输过程中，接收方无法再接收更多数据字节。</li><li>主机接收方必须向从机发送端发出传输结束的信号。</li></ol></li></ul><h5 id=a-id317-时钟同步317-时钟同步a><a id="3.1.7 时钟同步">3.1.7 时钟同步</a></h5><p>两个主机可以同时在空闲总线上开始传输，并且必须有一种方法来决定哪个主机控制总线并完成其传输。
+这是通过时钟同步和仲裁来实现的。
+在单个主机系统中，不需要时钟同步和仲裁。</p><p>时钟同步是通过将I2C接口的<strong>SCL</strong>进行线与实现的。
+这意味着<strong>SCL</strong>线上的高到低转换会使相关的主机开始计算它们的低电平周期。
+一旦某个主机的时钟变为低电平，它将促使<strong>SCL</strong>线保持该状态，直到时钟达到高电平状态（见 <em><a href="#图 7">图 7</a></em> ）。
+然而，如果另一个时钟仍处于其低电平周期内，则该时钟的低到高转换可能不会改变<strong>SCL</strong>线的状态。
+因此，<strong>SCL</strong>线由具有最长低电平周期的主机保持在低电平状态。在此期间，低电平周期较短的主机进入高电平等待状态。</p><p><a id="图 7">图 7
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_7._Clock_synchronization_during_the_arbitration_procedure.png alt></a></p><p>当所有相关主机都计算完它们的低电平周期后，时钟线被释放并变为高电平。
+此时，控制器时钟和<strong>SCL</strong>线的状态没有区别，所有控制器开始计重新数它们的高电平周期。</p><p>第一个结束高电平周期的主机再次将<strong>SCL</strong>线拉低。
+通过这种方式，生成一个同步的<strong>SCL</strong>时钟，其低电平周期由具有最长低电平周期的主机决定，高电平周期由具有最短高电平周期的的主机决定。</p><h5 id=a-id318-仲裁318-仲裁a><a id="3.1.8 仲裁">3.1.8 仲裁</a></h5><p>仲裁与同步类似，指的是仅在系统中使用多个主机时所需的协议的一部分。
+从机在仲裁过程中不参与。只有当总线空闲时，主机才能开始数据传输。
+两个主机可能在START条件的最小保持时间(t<sub>HD;STA</sub>)内生成一个START条件，从而在总线上导致有效的START条件。
+随后需要进行仲裁，以确定哪个主机将完成其传输。</p><p>仲裁逐位进行。在每一位期间，当<strong>SCL</strong>为高电平时，每个主机检查<strong>SDA</strong>电平是否与其发送的相匹配。
+这个过程可能需要许多位。只要传输相同，两个主机实际上可以在没有错误的情况下完成整个传输。
+当一个主机第一次尝试发送高电平但发现<strong>SDA</strong>电平为低电平时，该主机知道它已经失去仲裁，并关闭其<strong>SDA</strong>输出驱动器。
+另一个主机继续完成其传输。在仲裁过程中没有信息丢失。
+失去仲裁的主机可以在失去仲裁的字节结束之前生成时钟脉冲，并在总线空闲时必须重新启动其传输。</p><p>如果一个主机还包含从机功能，并且在寻址阶段失去仲裁，获得总线控制权的主机可能正在尝试寻址它。
+因此，失去仲裁的主机必须立即切换到其从机模式。</p><p><em><a href="#图 8">图 8</a></em> 显示了两个主机的仲裁过程。
+根据连接到总线的主机数量，可能会涉及更多的主机。
+当生成DATA1的主机内部数据电平与SDA线上的实际电平之间存在差异时，DATA1输出会关闭。这不会影响获得总线控制权主机发起的数据传输。</p><p><a id="图 8">图 8
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_8._Arbitration_procedure_of_two_controllers.png alt></a></p><p>由于I2C总线的控制完全由竞争控制器发送的地址和数据决定，因此不存在中央控制器，也没有总线上的优先顺序。
+如果仲裁程序在一个主机发送重复的START条件或STOP条件时，另一个主机仍在发送数据时，这将导致一种未定义的状态。
+换句话说，以下组合会导致未定义的状态：</p><ul><li>主机1发送重复的START条件，而主机2发送数据位。</li><li>主机1发送STOP条件，而主机2发送数据位。</li><li>主机1发送重复的START条件，而主机2发送STOP条件。</li></ul><h5 id=a-id319-时钟拉伸319-时钟拉伸a><a id="3.1.9 时钟拉伸">3.1.9 时钟拉伸</a></h5><p>时钟拉伸通过将<strong>SCL</strong>线保持在低电平来暂停事务。
+在该线路再次释放至高电平之前，传输无法继续。
+时钟拉伸是可选的，实际上大多数从机不包含<strong>SCL</strong>驱动器，因此它们无法拉伸时钟。</p><p>在字节级别，设备可能能够以较快的速率接收数据字节，但需要更多时间来存储接收到的字节或准备要传输的另一个字节。
+从机可以在接收和确认一个字节后将<strong>SCL</strong>线保持在低电平，以强制主机进入等待状态，直到从机准备好进行下一个字节传输，
+这是一种握手过程（见 <em><a href="#图 7">图 7</a></em> ）。</p><p>在比特级别，诸如微控制器的设备，无论是否有用于I2C总线的有限硬件，都可以通过延长每个时钟低电平周期来减慢总线时钟。
+任何控制器的速度都适应于该设备的内部操作速率。</p><p>在高速模式下，该握手功能仅可在字节级别使用（见 <em><a href="#5.3.2 hs-mode下的串行数据格式">5.3.2 Hs-mode下的串行数据格式</a></em> ）。</p><h5 id=a-id31103110a><a id=3.1.10>3.1.10</a></h5><p>数据传输遵循 <em><a href="#图 9">图 9</a></em> 所示的格式。</p><ol><li>启动阶段：发送START条件；</li><li>地址阶段：发送一个从机地址。这个地址可以是7位，也可以选择实现10位的地址；</li><li>方向阶段：发送数据方向位（R/W）——‘0’表示请求写入，‘1’表示请求读取；</li><li>响应阶段：由地址接收方发送一个响应；</li><li>数据发送阶段：8位的地址+一位的响应位；</li><li>停止阶段：</li></ol><p>在START条件（S）之后，发送一个从机地址。这个地址是七位长，
+后面跟着第八位，即数据方向位（R/W）——‘0’表示发送数据（写入），‘1’表示请求数据（读取）（参见 <em><a href="#图 10">图 10</a></em> ）。
+数据传输总是由主机生成的STOP条件（P）结束。
+然而，如果主机仍希望在总线上进行通信，它可以生成重复的START条件（Sr）并在不先生成STOP条件的情况下寻址另一个从机。
+在这样的传输中，可能会有各种读/写格式的组合。</p><p><a id="图 9">图 9
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_9._A_complete_data_transfer.png alt></a></p><p><a id="图 10">图 10
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_10._The_first_byte_after_the_START_procedure.png alt></a></p><p>可能的数据传输格式包括：</p><ul><li>主机发送端向从机接收端发送数据。传输方向不变（见 <em><a href="#图 11">图 11</a></em> ）。从机接收端确认每一个字节，发送ack或者nack。</li><li>主机在第一个字节之后立即读取从机（见 <em><a href="#图 12">图 12</a></em> ）。
+在第一次确认之后，主机发送端变为主机接收端，从机接收端变为从机发送端。这个第一次确认仍然由从机生成。主机生成后续的确认。
+STOP条件由主机生成，主机在STOP条件之前发送一个nack（<span style=text-decoration:overline>A</span>）。</li><li>组合格式（见 <em><a href="#图 13">图 13</a></em> ）。在传输过程中的方向变化时，START条件和从机地址都被重复，但R/W位则反转。
+如果主机接收端发送一个重复的START条件，它会在重复的START条件之前发送一个nack（<span style=text-decoration:overline>A</span>）。
+注意事项：</li></ul><ol><li>组合格式可以用于控制串行存储器。内部存储位置必须在第一个数据字节期间写入。在START条件和从机地址重复后，数据可以被传输。</li><li>所有关于自动增量或减量内存地址的决定由设备设计者做出。</li><li>每个字节后面都有一个确认位，如序列中的A或<span style=text-decoration:overline>A</span>所示。</li><li>兼容I2C总线的设备在接收到START或重复START条件时，必须重置其总线逻辑，以便它们都能预期发送从机地址，即使这些START条件并没有按照正确的格式定位。</li><li>一个START条件后紧接着STOP条件（空消息）是一个非法格式。然而，许多设备设计上能够在这种条件下正常工作。</li><li>连接到总线的每个设备都有唯一的地址。通常存在简单的主从关系，但也可以有多个相同的从机能够同时接收和响应，例如在组广播中。
+这种技术在使用总线切换设备(如PCA9546A)时效果最佳，其中所有四个通道都打开且相同的设备同时配置，应当理解无法同时确定每个目标是否确认。
+需要一次打开一个通道依次读取每个单独设备的配置以确认传输结果。细节请参阅各个组件的数据表。</li></ol><p><a id="图 11">图 11
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_11._A_controller-transmitter_addressing_a_target_receiver_with_a_7-bit_address_%28the_transfer_direction_is_not_changed%29.png alt></a></p><p><a id="图 12">图 12
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_12._A_controller_reads_a_target_immediately_after_the_first_byte.png alt></a></p><p><a id="图 13">图 13
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt></a></p><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
+Previous Post</a></li><li class=next><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>Next
+Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
+visible-lg-block
+sidebar-container
+catalog-container"><div class=side-catalog><hr class="hidden-sm hidden-xs"><h5><a class=catalog-toggle href=#>CATALOG</a></h5><ul class=catalog-body></ul></div></div><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/icer/tags/ahb title=ahb>ahb
+</a><a href=/icer/tags/amba title=amba>amba
+</a><a href=/icer/tags/amba5 title=amba5>amba5
+</a><a href=/icer/tags/apb title=apb>apb
+</a><a href=/icer/tags/bus title=bus>bus
+</a><a href=/icer/tags/git title=git>git
+</a><a href=/icer/tags/html title=html>html
+</a><a href=/icer/tags/i2c title=i2c>i2c
+</a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
+</a><a href=/icer/tags/nxp title=nxp>nxp
+</a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译
+</a><a href=/icer/tags/%E5%A4%A7%E5%B0%8F%E7%AB%AF title=大小端>大小端
+</a><a href=/icer/tags/%E5%AD%97%E8%8A%82%E5%BA%8F title=字节序>字节序
+</a><a href=/icer/tags/%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2 title=知识提纲>知识提纲</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/icjj><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/ICJJ><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-gitlab fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://stackoverflow.com/users/26381389><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i></span></a></li><li><a href rel=alternate type=application/rss+xml title="ICJJ Blog"><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-rss fa-stack-1x fa-inverse"></i></span></a></li></ul><p class="copyright text-muted">Copyright &copy; ICJJ Blog 2024<br><a href=https://themes.gohugo.io/hugo-theme-cleanwhite>CleanWhite Hugo Theme</a> by <a href=https://zhaohuabing.com>Huabing</a> |
+<iframe style=margin-left:2px;margin-bottom:-5px frameborder=0 scrolling=0 width=100px height=20px src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true"></iframe></p></div></div></div></footer><script>function loadAsync(e,t){var s=document,o="script",n=s.createElement(o),i=s.getElementsByTagName(o)[0];n.src=e,t&&n.addEventListener("load",function(e){t(null,e)},!1),i.parentNode.insertBefore(n,i)}</script><script>$("#tag_cloud").length!==0&&loadAsync("/js/jquery.tagcloud.js",function(){$.fn.tagcloud.defaults={color:{start:"#bbbbee",end:"#0085a1"}},$("#tag_cloud a").tagcloud()})</script><script>loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js",function(){var e=document.querySelector("nav");e&&FastClick.attach(e)})</script><script type=text/javascript>function generateCatalog(e){_containerSelector="div.post-container";var t,n,s,o,i,a=$(_containerSelector),r=a.find("h1,h2,h3,h4,h5,h6");return $(e).html(""),r.each(function(){t=$(this).prop("tagName").toLowerCase(),o="#"+$(this).prop("id"),n=$(this).text(),i=$('<a href="'+o+'" rel="nofollow">'+n+"</a>"),s=$('<li class="'+t+'_nav"></li>').append(i),$(e).append(s)}),!0}generateCatalog(".catalog-body"),$(".catalog-toggle").click(function(e){e.preventDefault(),$(".side-catalog").toggleClass("fold")}),loadAsync("/icer/js/jquery.nav.js",function(){$(".catalog-body").onePageNav({currentClass:"active",changeHash:!1,easing:"swing",filter:"",scrollSpeed:700,scrollOffset:0,scrollThreshold:.2,begin:null,end:null,scrollChange:null,padding:80})})</script><script src=https://cdn.jsdelivr.net/gh/jmnote/plantuml-encoder@1.2.4/dist/plantuml-encoder.min.js integrity="sha256-Qsk2KRBCN5qVZX7B+8+2IvQl1Aqc723qV1tBCQaVoqo=" crossorigin=anonymous></script><script>(function(){let e="language-plantuml";Array.prototype.forEach.call(document.querySelectorAll("[class^="+e+"]"),function(e){let t=document.createElement("IMG");t.loading="lazy",t.src="http://www.plantuml.com/plantuml/svg/~1"+plantumlEncoder.encode(e.innerText),e.parentNode.parentNode.insertBefore(t,e.parentNode),e.parentNode.style.display="none"})})()</script></body></html>
