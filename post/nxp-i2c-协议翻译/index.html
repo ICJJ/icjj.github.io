@@ -74,9 +74,9 @@ I2C总线上的数据可以在标准模式下以高达100 kbit/s的速度传输�
 当基极没有电流时，开关关闭，输出悬空。
 在开关关闭时接上拉电阻将引脚接到高电平。本身无法提供源电流，需要外部电路提供。</p><p><a id=[6]>[6]</a> ：push-pull配置需要两个晶体管（MOSFET或BJT），一个用来将输出拉高（到电源电压），另一个用来将输出拉低（到地）。
 多主从结构，由于线与的仲裁机制，可能会损坏设备。只推荐在单主从结构中使用。</p><p><a id="图 3">图 3
-<img src=https://icjj.github.io/icer/img/post/i2c/Figure_3._Devices_with_various_supply_voltages_sharing_the_same_bus.png alt></a></p><h5 id=a-idsda和scl逻辑电平sda和scl逻辑电平a><a id=sda和scl逻辑电平>SDA和SCL逻辑电平</a></h5><p>由于连接到I2C总线不同技术设备（CMOS，NMOS，双极型）的多样性，逻辑‘0’（低）和‘1’（高）的电平不是固定的，而是依赖于VDD的相关电平。
-输入参考电平设置为VDD的30%和70%；VIL为0.3VDD，VIH为0.7VDD。请参见 <em><a href="#图 38">图 38</a></em> 的时序图。
-一些旧设备的输入电平固定为VIL = 1.5 V和VIH = 3.0 V，但所有新设备都要求采用此30%/70%的规范。
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_3._Devices_with_various_supply_voltages_sharing_the_same_bus.png alt></a></p><h5 id=a-idsda和scl逻辑电平sda和scl逻辑电平a><a id=sda和scl逻辑电平>SDA和SCL逻辑电平</a></h5><p>由于连接到I2C总线不同技术设备（CMOS，NMOS，双极型）的多样性，逻辑‘0’（低）和‘1’（高）的电平不是固定的，而是依赖于V<sub>DD</sub>的相关电平。
+输入参考电平设置为V<sub>DD</sub>的30%和70%；V<sub>IL</sub>为0.3V<sub>DD</sub>，V<sub>IH</sub>为0.7V<sub>DD</sub>。请参见 <em><a href="#图 38">图 38</a></em> 的时序图。
+一些旧设备的输入电平固定为V<sub>IL</sub> = 1.5 V和V<sub>IH</sub> = 3.0 V，但所有新设备都要求采用此30%/70%的规范。
 有关电气规范，请参见 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em> 。</p><h5 id=a-id数据有效性数据有效性a><a id=数据有效性>数据有效性</a></h5><p>在时钟的高电平期间，<strong>SDA</strong>线上的数据必须保持稳定。
 数据线的高或低状态只能在SCL线上的时钟信号为低时改变（见 <em><a href="#图 4">图 4</a></em> ）。
 每传输一个数据位，都会生成一个时钟脉冲。</p><p><a id="图 4">图 4
@@ -137,7 +137,7 @@ STOP条件由主机生成，主机在STOP条件之前发送一个nack（<span st
 需要一次打开一个通道依次读取每个单独设备的配置以确认传输结果。细节请参阅各个组件的数据表。</li></ol><p><a id="图 11">图 11
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_11._A_controller-transmitter_addressing_a_target_receiver_with_a_7-bit_address_%28the_transfer_direction_is_not_changed%29.png alt></a></p><p><a id="图 12">图 12
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_12._A_controller_reads_a_target_immediately_after_the_first_byte.png alt></a></p><p><a id="图 13">图 13
-<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt></a></p><h5 id=a-id3111-bit-bit-地址3111-bit-bit-地址a><a id="3.1.11 bit-bit 地址">3.1.11 bit-bit 地址</a></h5><p>10位寻址扩展了可能的地址数量。设备可以使用7位和10位地址连接到同一个I2C总线。
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt></a></p><h5 id=a-id3111-10-bit地址3111-10-bit地址a><a id="3.1.11 10-bit地址">3.1.11 10-bit地址</a></h5><p>10位寻址扩展了可能的地址数量。设备可以使用7位和10位地址连接到同一个I2C总线。
 7位和10位寻址可以在所有总线速度模式下使用。目前10位寻址并未被广泛使用。</p><p>10位从机地址由START条件S或重复START条件Sr后的前两个字节组成。</p><p>第一个字节的前七位是0b1111_0XX组合，其中最后两位XX是10位地址的两个最高有效位。第一个字节的第八位是（R/<span style=text-decoration:overline>w</span>）位用于确定消息的方向。</p><p>虽然保留的地址位0b1111_XXX有八种可能的组合，但只有四种组合的0b1111_0XX用于10位寻址。剩余的四种组合0b1111_1XX保留用于未来I2C总线的增强。</p><p>之前描述的7位寻址的所有读写格式组合在10位寻址中都是可能的。这里详细说明两种：</p><ul><li>主机发送端向10位从机地址的从机接收端发送数据，传输方向不变 <em><a href="#图 14">图 14</a></em> 。
 当10位地址跟在START条件后时，每个从机都会将从机地址第一个字节的前七位0b1111_0XX与自己的地址进行比较，并检查第八位（R/<span style=text-decoration:overline>w</span>）方向位是否为0。
 可能会有多个从机发现匹配并产生应答A1。所有发现匹配的从机都会将从机地址第二个字节的八位XXXX_XXXX与自己的地址进行比较。
@@ -175,13 +175,13 @@ STOP条件由主机生成，主机在STOP条件之前发送一个nack（<span st
 必须采取预防措施，以确保在施加电源电压后设备不会拉低<strong>SDA</strong>或<strong>SCL</strong>线，因为这些低电平会阻塞总线。</p><h5 id=a-id3115-start字节3115-start字节a><a id="3.1.15 START字节">3.1.15 START字节</a></h5><p>微控制器可以通过两种方式连接到I2C总线。
 具有片上硬件I2C总线接口的微控制器可以被编程为仅接受来自总线的请求被中断。
 当设备没有这样的接口时，它必须通过软件不断监控总线。
-显然，微控制器监视或轮询总线的次数越多，它用于执行其预期功能的时间就越少。</p><p>因此，依赖软件轮询的相对较慢的微控制器与快速硬件设备之间存在速度差异。</p><p>在这种情况下，数据传输可以通过启动程序来进行，该程序比正常情况要长得多（见 <em><a href="#图 9">图 9</a></em> ）。启动程序由以下内容组成：</p><ul><li>START；</li><li>START字节包（0b0000_0001）；</li><li>（A<span style=text-decoration:overline>A</span>）脉冲；</li><li>重复的START；</li></ul><p><a id="图 18">图 18
+显然，微控制器监视或轮询总线的次数越多，它用于执行其预期功能的时间就越少。</p><p>因此，依赖软件轮询的相对较慢的微控制器与快速硬件设备之间存在速度差异。</p><p>在这种情况下，数据传输可以通过启动程序来进行，该程序比正常情况要长得多（见 <em><a href="#图 19">图 19</a></em> ）。启动程序由以下内容组成：</p><ul><li>START；</li><li>START字节包（0b0000_0001）；</li><li>（A<span style=text-decoration:overline>A</span>）脉冲；</li><li>重复的START；</li></ul><p><a id="图 19">图 19
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_19._START_byte_procedure.png alt></a></p><p>在一个需要总线访问的控制器传输了START条件S之后，START字节（0b0000_0001）被传输。
 因此，另一个微控制器可以以低采样率对<strong>SDA</strong>线进行采样，直到检测到START字节中的七个零之一。
 在检测到<strong>SDA</strong>线上的低电平之后，微控制器可以切换到更高的采样率，以找到重复的START条件Sr，然后用于同步。</p><p>硬件接收端在接收到重复的START条件Sr后重置，因此忽略START字节。</p><p>在START字节之后生成与确认相关的时钟脉冲。这仅存在于与总线上使用的字节处理格式相一致的情况。任何设备都不允许确认START字节。</p><h5 id=a-id3116-总线清除3116-总线清除a><a id="3.1.16 总线清除">3.1.16 总线清除</a></h5><p>在不太可能的情况下，如果时钟（<strong>SCL</strong>）被固定为低电平，如果I2C设备具有硬件复位输入,则优选的步骤是使用硬件复位信号重置总线。
 如果I2C设备没有硬件复位输入，则切断设备电源以激活强制性的内部上电复位（POR）电路。</p><p>如果数据线（<strong>SDA</strong>）被固定为低电平，控制器应发送九个时钟脉冲。
 保持总线为低电平的设备应在这九个时钟内某个时间释放它。
-如果没有，则使用硬件复位或切断电源以清除总线。</p><h5 id=a-id3117-设备id3117-设备ida><a id="3.1.17 设备id">3.1.17 设备ID</a></h5><p>设备ID字段（见 <em><a href="#图 20">图 20</a></em> ）是一个可选的3字节只读（24 位），提供以下信息：</p><ul><li>十二位具有制造商名称，每个制造商唯一（例如，NXP）</li><li>九位具有部件标识，由制造商分配（例如，PCA9698）</li><li>三位具有晶圆修订，由制造商分配（例如，RevX）</li></ul><p><a id="图 18">图 18
+如果没有，则使用硬件复位或切断电源以清除总线。</p><h5 id=a-id3117-设备id3117-设备ida><a id="3.1.17 设备id">3.1.17 设备ID</a></h5><p>设备ID字段（见 <em><a href="#图 20">图 20</a></em> ）是一个可选的3字节只读（24 位），提供以下信息：</p><ul><li>十二位具有制造商名称，每个制造商唯一（例如，NXP）</li><li>九位具有部件标识，由制造商分配（例如，PCA9698）</li><li>三位具有晶圆修订，由制造商分配（例如，RevX）</li></ul><p><a id="图 20">图 20
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_20._Device_ID_field.png alt></a></p><p>设备ID是只读的，硬件固定在设备中，可以通过以下方式访问：</p><ol><li>START;</li><li>主机发送保留设备ID的I2C总线地址，后跟R/W位设置为‘0’（写）：‘0b1111_1000’。</li><li>主机发送它必须识别从机的I2C总线从机地址。 LSB是‘不关心’值。 仅有一个设备必须确认此字节（拥有I2C总线从机地址的设备）。</li><li>主机发送Re-START条件。</br>注意：一个STOP条件后跟一个START条件会重置目标状态机，无法执行设备ID读取。
 同时，一个STOP条件或一个Re-START 条件后跟对另一个从机的访问会重置目标状态机，无法执行设备ID读取。</li><li>主机发送保留设备ID的I2C总线地址，后跟（R/<span style=text-decoration:overline>w</span>）位设置为‘1’（读）：‘1111 1001’。</li><li>设备ID读取可以进行，
 从12个位制造商位（第一个字节+第二个字节的四个MSB）开始，
@@ -194,13 +194,229 @@ UFm I2C总线协议基于标准I2C总线协议，由START、从机地址、命�
 命令位仅为“写入”，第九个时钟上的数据位驱动为高电平。因为总线是单向的，所以忽略ACK周期。
 2线推挽驱动器由UFm串行时钟（<strong>USCL</strong>）和串行数据（<strong>USDA</strong>）组成。</p><p>从机包含一个唯一地址（无论是微控制器、LCD驱动器、LED控制器或GPO），并仅作为接收端工作。
 LED驱动器可能只是一个接收端，可以由UFm支持，但内存则可以接收和发送数据，不受UFm支持。</p><p>由于UFm I2C总线使用推挽驱动器，因此没有有线与门开漏Sm、Fm和Fm+ I2C总线的多控制器能力。
-在UFm中，主机是唯一发起总线上数据传输的设备，并生成时钟信号以允许该传输。所有其他被寻址的设备被视为从机。</p><p><a id="表 6">表 6</a> UFm的术语描述</p><table><thead><tr><th>术语</th><th>描述</th></tr></thead><tbody><tr><td>发送端</td><td>这个设备将数据发送到总线上。</td></tr><tr><td>接收端</td><td>这个设备从总线上接收数据。</td></tr><tr><td>主机（Controller）</td><td>这个设备主动发起传输，产生时钟以及终止传输。</td></tr><tr><td>从机（Target）</td><td>这个设备由主机进行控制。</td></tr></tbody></table><p>让我们考虑在主机与连接到UFm I2C总线的多个从机之间进行数据传输的情况（见 <em><a href="#图 21">图 21</a></em> ）</p><p><a id="图 18">图 18
+在UFm中，主机是唯一发起总线上数据传输的设备，并生成时钟信号以允许该传输。所有其他被寻址的设备被视为从机。</p><p><a id="表 6">表 6</a> UFm的术语描述</p><table><thead><tr><th>术语</th><th>描述</th></tr></thead><tbody><tr><td>发送端</td><td>这个设备将数据发送到总线上。</td></tr><tr><td>接收端</td><td>这个设备从总线上接收数据。</td></tr><tr><td>主机（Controller）</td><td>这个设备主动发起传输，产生时钟以及终止传输。</td></tr><tr><td>从机（Target）</td><td>这个设备由主机进行控制。</td></tr></tbody></table><p>让我们考虑在主机与连接到UFm I2C总线的多个从机之间进行数据传输的情况（见 <em><a href="#图 21">图 21</a></em> ）</p><p><a id="图 21">图 21
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_21._Example_of_UFm_I2C-bus_configuration.png alt></a></p><p>这突出了在UFm I2C总线上的主机发射端和从机接收端的关系。要注意的是这些关系是永久性的，因为数据传输仅允许单向进行。
 数据传输将按如下方式进行：<br>假设ASIC主机想要将信息发送到LED控制器2：</p><ul><li>ASIC A（主机发射端）通过在<strong>USDA</strong>上发送地址并在<strong>USCL</strong>上生成时钟来寻址LED控制器2（从机接收端）。</li><li>ASIC A（主机发射端）在<strong>USDA</strong>上向LED控制器2（从机接收端）发送数据并在<strong>USCL</strong>上生成时钟。</li><li>ASIC A终止传输。</li></ul><p>由于推挤输出上的总线争用问题，不允许将多个UFm控制器连接到UFm I2C总线。
 如果系统中需要额外的控制器，则必须与其他控制器完全隔离（即，使用真正的“独热”多路复用器，输入多个主机信号，只使能一个主机使用总线）。
 因为在总线上一次只允许一个控制器。</p><p>在UFm I2C总线上生成时钟信号始终是主机的责任，也就是说，主机在总线传输数据时生成时钟信号。
 主机发出的总线时钟信号不能被从机通过时钟拉伸改变，并且在UFm I2C总线上不存在仲裁和时钟同步的过程。</p><p><em><a href="#表 7">表 7 </a></em>总结了UFm I2C总线规范中强制性和可选部分的使用。</p><p><a id="表 7">表 7</a> UFm i2c总线的功能适用性
-M = 强制的；O=可选的；n/p = 不可能。</p><table><thead><tr><th>功能</th><th>适用性</th></tr></thead><tbody><tr><td>START</td><td>M</td></tr><tr><td>STOP</td><td>M</td></tr><tr><td>ACK（A<span style=text-decoration:overline>A</span>）</td><td>n/p</td></tr><tr><td>同步</td><td>n/p</td></tr><tr><td>仲裁</td><td>n/p</td></tr><tr><td>时钟拉伸</td><td>n/p</td></tr><tr><td>7位目标地址</td><td>M</td></tr><tr><td>10位目标地址</td><td>O</td></tr><tr><td>通用广播地址</td><td>O</td></tr><tr><td>软件重置</td><td>O</td></tr><tr><td>START字节</td><td>O</td></tr><tr><td>设备 ID</td><td>n/p</td></tr></tbody></table><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
+M = 强制的；O=可选的；n/p = 不可能。</p><table><thead><tr><th>功能</th><th>适用性</th></tr></thead><tbody><tr><td>START</td><td>M</td></tr><tr><td>STOP</td><td>M</td></tr><tr><td>ACK（A<span style=text-decoration:overline>A</span>）</td><td>n/p</td></tr><tr><td>同步</td><td>n/p</td></tr><tr><td>仲裁</td><td>n/p</td></tr><tr><td>时钟拉伸</td><td>n/p</td></tr><tr><td>7位目标地址</td><td>M</td></tr><tr><td>10位目标地址</td><td>O</td></tr><tr><td>通用广播地址</td><td>O</td></tr><tr><td>软件重置</td><td>O</td></tr><tr><td>START字节</td><td>O</td></tr><tr><td>设备 ID</td><td>n/p</td></tr></tbody></table><h5 id=a-id321-usda和uscl信号321-usda和uscl信号a><a id="3.2.1 usda和uscl信号">3.2.1 USDA和USCL信号</a></h5><p><strong>USDA</strong>和<strong>USCL</strong>都是单向线路，具有推拉输出。
+当总线空闲时，两个线路都由输出级的上部晶体管拉高。
+在UFm模式下，I2C总线上的数据传输速率可以达到5000 kbit/s。
+连接到总线的接口数量受到总线负载、来自电缆端、连接器和分支的反射的限制。</p><p><a id="图 22">图 22
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_22._Simplified_schematic_of_USCL,_USDA_outputs.png alt></a></p><h5 id=a-id322-usda和uscl的逻辑电平322-usda和uscl的逻辑电平a><a id="3.2.2 usda和uscl的逻辑电平">3.2.2 usda和uscl的逻辑电平</a></h5><p>由于可以连接到I2C总线的多种不同技术设备（CMOS，NMOS，双极型），逻辑‘0’（低）和‘1’（高）的电平并不是固定的，而是取决于相关的V<sub>DD</sub>电平。
+输入参考电平设定为V<sub>DD</sub>的30%和70%；V<sub>IL</sub>为0.3V<sub>DD</sub>，V<sub>IH</sub>为0.7V<sub>DD</sub>。参见 <em><a href="#图 40">图 40</a></em> ，时序图。
+有关电气规格，请参见 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em> 。</p><h5 id=a-id323-数据有效性323-数据有效性a><a id="3.2.3 数据有效性">3.2.3 数据有效性</a></h5><p><strong>USDA</strong>线路上的数据在时钟的HIGH期间必须是稳定的。
+数据线路的HIGH或LOW状态只能在<strong>USCL</strong>线路上的时钟信号为LOW时改变（见 <em><a href="#图 23">图 23</a></em> ）。
+每传输一个数据位就会生成一个时钟脉冲。</p><p><a id="图 23">图 23
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_23._Bit_transfer_on_the_UFm_I2C-bus.png alt></a></p><h5 id=a-id324-start和stop条件324-start和stop条件a><a id="3.2.4 start和stop条件">3.2.4 START和STOP条件</a></h5><p>当总线未被占用时，数据线和时钟线保持高电平。
+所有传输以START信号(S)开始，并可以通过STOP信号(P)结束(见 <em><a href="#图 24">图 24</a></em> )。
+当<strong>USCL</strong>线为高电平时，<strong>USDA</strong>线从高电平到低电平的转换定义了START条件。
+当<strong>USCL</strong>线为高电平时，<strong>USDA</strong>线从低电平到高电平的转换定义了STOP条件。</p><p><a id="图 24">图 24
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_24._Definition_of_START_and_STOP_conditions_for_UFm_I2C-bus.png alt></a></p><p>START和STOP条件始终由主机生成。
+总线在START条件后被视为忙碌。该总线在STOP条件后的某段时间内再次被视为空闲。
+此总线空闲状态在 <em><a href="#第6章 i/o阶段和总线线路的电气规格及时序">第6章 I/O阶段和总线线路的电气规格及时序</a></em> 中规定。</p><p>如果生成重复的START (Sr)而不是STOP条件，总线将保持忙碌。
+在这方面，START (S)和重复的START (Sr)条件在功能上是相同的。
+因此，在本文的其余部分，S符号将被用作通用术语，表示START和重复的START条件，除非Sr特别相关。</p><p>如果连接到总线的设备具备必要的接口硬件，则START和STOP条件的检测是简单的。
+然而，具有未包含此接口的微控制器必须在每个时钟周期至少对<strong>USDA</strong>线采样两次以进行必要的过度感知。</p><h5 id=a-id325-byte-格式325-byte-格式a><a id="3.2.5 byte 格式">3.2.5 Byte 格式</a></h5><p>每个放在<strong>USDA</strong>线路上的字节必须为八位长。
+每次传输可以传输的字节数没有限制。
+在确认周期中，主机在每个字节之后将<strong>USDA</strong>拉高。
+如果从机无法接收另一个完整的数据字节，或者在执行其他功能时，例如处理内部中断，则不允许将时钟保持在低电平。</p><p><a id="图 25">图 25
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_25._Data_transfer_on_the_UFm_I2C-bus.png alt></a></p><h5 id=a-id326-ack和nack326-ack和nacka><a id="3.2.6 ack和nack">3.2.6 ack和nack</a></h5><p>由于从机无法在第九个时钟周期内响应，因此不需要ACK和NACK。
+然而，第九个时钟周期在UFm中被保留，以兼容I2C总线协议。ACK和NACK也被称为第九个时钟周期。
+主机生成所有时钟脉冲，包括第九个时钟脉冲。第九个数据位始终为高电平（‘1’）。
+从机不允许在任何时候驱动SDA线。</p><h5 id=a-id327-从机地址和rw读写327-从机地址和rw读写a><a id="3.2.7 从机地址和rw读写">3.2.7 从机地址和rw读写</a></h5><p>数据传输遵循 <em><a href="#图 26">图 26</a></em> 所示的格式。
+在START条件（S）之后，发送从机地址。
+该地址为七位长，后面跟着一个第八位，即数据方向位（W）——‘0’表示传输（写入）；‘1’表示请求数据（读取），
+而且UFm不支持读取（除了START字节，<em><a href="#3.2.12 start byte">3.2.12 START byte</a></em> ），因为通信是单向的（参见 <em><a href="#图 27">图 27</a></em> ）。
+数据传输总是由主机生成的STOP条件（P）终止。
+然而，如果主机仍希望在总线上进行通信，它可以生成重复的START条件（Sr），并在不先生成STOP条件的情况下指定另一个从机。</p><p><a id="图 26">图 26
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_26._A_complete_UFm_data_transfer.png alt></a></p><p><a id="图 27">图 27
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_27._The_first_byte_after_the_START_procedure.png alt></a></p><p>UFm数据传输格式为：</p><ul><li>主机发射端发送数据到从机接收端。传输方向不变。
+（见 <em><a href="#图 28">图 28</a></em> ）。主机永远不会ack，因为它从未接收任何数据。
+但在第九位上生成“1”以便目标符合I2C总线协议。</li></ul><p><a id="图 28">图 28
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_28._A_controller-transmitter_addressing_a_target_receiver_with_a_7-bit_address.png alt></a></p><p>Note：</p><ol><li>可以使用单个传输或重复的START格式来一次性处理多个从机。在重复START条件和从机地址后，可以传输数据。</li><li>有关自动递增或递减先前访问的内存位置等的所有决策由设备设计者做出。</li><li>每个字节后面都有一个nack位，如序列中的<span style=text-decoration:overline>A</span>块所示。</li><li>I2C总线兼容设备必须在收到START或重复START条件时重置其总线逻辑，以便它们都能够预期从机地址的发送，即使这些START条件未按照正确格式定位。</li><li>一个START条件紧接着一个STOP条件（无效消息）是非法格式。然而，许多设备可以设计为在这种条件下正常运行。</li><li>连接到总线的每个设备都可以通过唯一地址寻址。只存在简单的主从关系，但可以有多个相同的从机可以同时接收和响应。
+例如在组播中，所有相同的设备同时配置，可以理解到无法同时确定每个从机是否都有响应。请参考各个组件的数据手册。</li></ol><h5 id=a-id10-bit地址10-bit地址a><a id=10-bit地址>10-bit地址</a></h5><p>10位寻址扩展了可用地址的数量。
+具有7位和10位地址的设备可以连接到同一I2C总线，并且7位和10位寻址可以用于所有总线速率模式。</p><p>10位从机地址由在START条件(S)或重复START条件(Sr)后面的前两个字节构成。
+第一个字节的前七位是组合0b1111_0XX，其中最后两位(XX)是10位地址的两个最高有效位(MSB)；
+第一个字节的第八位是R/<span style=text-decoration:overline>W</span>位，用来确定消息的方向。</p><p>尽管有八种可能的保留地址位组合0b1111_XXX，但仅用于10位寻址的组合是0b1111_0XX。剩下的四种组合0b1111_1XX被保留用于未来的I2C总线增强。
+仅以前描述的7位寻址写格式可用于10位寻址。详细信息如下：</p><ul><li>主机发射端使用10位从机地址向从机接收端发送数据。
+传输方向不变（见 <em><a href="#图 29">图 29</a></em> ）。
+当10位地址跟随一个START条件时，每个从机将从机地址第一个字节的前七位(0b1111_0XX)与其自身地址进行比较，
+并检查第八位(R/<span style=text-decoration:overline>W</span>方向位)是否为0(<span style=text-decoration:overline>W</span>)。
+所有找到匹配的从机将从机地址的第二个字节的八位(XXXX XXXX)与自己的地址进行比较，但只有一个从机找到匹配。
+匹配的从机将由主机保持寻址，直到它接收到停止条件(P)或跟随不同从机地址的重复START条件(Sr)。</li></ul><h5 id=a-id329-ufm的保留地址329-ufm的保留地址a><a id="3.2.9 ufm的保留地址">3.2.9 UFM的保留地址</a></h5><p>UFm I2C总线的物理层与其他I2C总线模式不同。
+因此可用的从机地址范围也不同。
+<em><a href="#表 8">表 8</a></em> 中所示的从机保留了两组八个地址（0b0000_XXX和0b1111_XXX）。</p><p><a id="表 8">表 8</a> 保留地址</br>X = 不care；1 = HIGH；0 = LOW。</p><table><thead><tr><th>从机地址</th><th>R/W</th><th>bit</th><th>Description</th></tr></thead><tbody><tr><td>0b0000_000</td><td>0</td><td>通用广播地址 <sup><em><a href=#[11]>[11]</a></em></sup></td><td></td></tr><tr><td>0b0000_000</td><td>1</td><td>START byte <sup><em><a href=#[12]>[12]</a></em></sup></td><td></td></tr><tr><td>0b0000_001</td><td>X</td><td>reserved for future purposes</td><td></td></tr><tr><td>0b0000_010</td><td>X</td><td>reserved for future purposes</td><td></td></tr><tr><td>0b0000_011</td><td>X</td><td>reserved for future purposes</td><td></td></tr><tr><td>0b0000_1XX</td><td>X</td><td>reserved for future purposes</td><td></td></tr><tr><td>0b1111_1XX</td><td>X</td><td>reserved for future purposes</td><td></td></tr><tr><td>0b1111_0XX</td><td>X</td><td>10-bit 从机地址</td><td></td></tr></tbody></table><p><a id=[10]>[10]</a> ：通用广播地址用于多个功能，包括软件重置。</p><p><a id=[11]>[11]</a> ：不允许任何UFm设备在接收到START字节时进行确认。</p><p>在本地系统中地址的分配由系统架构师负责，他们必须考虑总线上使用的设备以及将来与保留地址的任何交互。
+例如，一个具有七个用户可分配地址引脚的设备允许所有128个地址被分配。如果已知保留地址将永远不会用于其预定目的，则可以将保留地址用作从机地址。</p><h5 id=a-id3210-通用广播地址3210-通用广播地址a><a id="3.2.10 通用广播地址">3.2.10 通用广播地址</a></h5><p>通用官博地址用于同时寻址所有连接到I2C总线的设备。
+然而，如果某个设备不需要一般调用结构中提供的任何数据，它可以忽略此地址。
+如果某个设备确实需要来自通用广播地址的数据，它会表现得像一从机接收端。
+主机实际上并不知道有多少设备对通用广播做出响应。
+每个能够处理这些数据的从机接收端都会接收第二个及后续字节。
+无法处理其中一个字节的从机必须忽略它。
+通用广播地址的含义总是在第二个字节中指定（见 <em><a href="#图 30">图 30</a></em>）。</p><p><a id="图 30">图 30 ![](<a href=https://icjj.github.io/icer/img/post/i2c/Figure_30._General_call_address_format.png>https://icjj.github.io/icer/img/post/i2c/Figure_30._General_call_address_format.png</a></a></p><p>考虑两个情况：</p><ul><li>当最低有效位B为‘1’时，第二个字节的定义如下：<ul><li>0b0000_0110 (0h6)</br>通过硬件重置并写入目标地址的可编程部分。在接收到这个2字节序列后，所有设计为响应广播地址的设备都会重置并接受它们地址的可编程部分。</li><li>0b0000_0100 (0h4)</br>通过硬件写入目标地址的可编程部分。表现如上，但设备不会重置。</li><li>0b0000_0000 (0h0)</br>这个代码不允许用作第二个字节。编程过程的序列已在相应设备的数据手册中发布。其余代码未被固定，设备必须忽略它们。</li></ul></li><li>当最低有效位B为‘1’时，2字节序列被忽略。</li></ul><h5 id=a-id3211-软件复位3211-软件复位a><a id="3.2.11 软件复位">3.2.11 软件复位</a></h5><p>在接收到通用广播（0b0000_0000）后，发送0b0000_0110（0h6）作为第二个字节会导致软件复位。
+此功能是可选的，并不是所有设备都对该命令做出响应。在接收到此2字节序列时，所有设计为响应通用广播地址的设备将复位并接受其地址的可编程部分。</p><h5 id=a-id3212-start-byte3212-start-bytea><a id="3.2.12 start byte">3.2.12 START Byte</a></h5><p>微控制器可以通过两种方式连接到I2C总线。
+具有片上硬件I2C总线接口的微控制器可以被编程为仅在接收到来自总线的请求时中断。
+当设备没有这样的接口时，它必须通过软件不断监控总线。
+显然，微控制器监控或轮询总线的次数越多，它就越少时间用于执行其预期功能。</p><p>因此，快速硬件设备与依赖软件轮询的相对较慢的微控制器之间存在速度差异。
+在这种情况下，数据传输可以通过一个比正常长得多的START程序进行（见 <em><a href="#图 31">图 31</a></em> ）。START程序包括：</p><ul><li>START（S）</li><li>START字节（0000 0001）</li><li>非确认时钟脉冲（NACK）</li><li>重复START条件（Sr）</li></ul><p><a id="图 31">图 31
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_31._START_byte_procedure.png alt></a></p><p>在需要总线访问的主机传输START条件S之后，START字节（0b0000_0001）被传输。
+因此，另一个微控制器可以以较低的采样率对<strong>USDA</strong>线进行采样，直到检测到START字节中的七个零之一。
+在检测到<strong>USDA</strong>线上这个低电平后，微控制器可以切换到更高的采样率，以查找重复的START条件Sr，
+然后用于同步。硬件接收器在接收到重复的START条件Sr时重置，因此忽略START字节。
+在START字节之后生成一个与确认相关的时钟脉冲。这仅用于符合总线中使用的字节处理格式。没有设备被允许确认START字节。</p><h5 id=a-id3213-无响应从机复位3213-无响应从机复位a><a id="3.2.13 无响应从机复位">3.2.13 无响应从机复位</a></h5><p>在极少数的情况下，如果从机变得无响应（例如，通过外部反馈判断，而非通过UFm I2C总线），
+首选程序是使用软件重置命令或硬件重置信号重置目标。
+如果目标不支持这些功能，则需要切断设备电源以启动强制内部上电复位（POR）电路。</p><h5 id=a-id3214-设备id3214-设备ida><a id="3.2.14 设备id">3.2.14 设备ID</a></h5><p>在UFm中不支持设备ID。</p><h3 id=a-id第4章-i2c总线的其他使用第4章-i2c总线的其他使用a><a id="第4章 i2c总线的其他使用">第4章 i2c总线的其他使用</a></h3><p>I2C总线被用作多个系统架构的通讯协议。
+这些架构在基本I2C规范的基础上增加了命令集和特定应用的扩展。</p><p>一般而言，简单的I2C总线设备如I/O扩展器可以用于这些架构中的任何一种，因为协议和物理接口都是相同的。</p><h4 id=a-id41-cbus兼容性41-cbus兼容性a><a id="4.1 cbus兼容性">4.1 CBUS兼容性</a></h4><p>CBUS 接收器可以连接到标准模式 I2C 总线上。
+然而，必须连接一条称为<strong>DLEN</strong>的第三条总线，并省略确认位。
+通常，I2C 传输是一系列 8 位字节；CBUS 兼容设备具有不同的格式。
+在混合总线结构中，I2C 总线设备不得响应 CBUS 消息。
+因此，保留了一个特殊的 CBUS 地址（0000 001X），没有 I2C 总线兼容设备对此做出响应。
+在传输 CBUS 地址后，DLEN 线可以激活，并发送 CBUS 格式的传输。
+在START条件之后，所有设备再次准备接受数据。主机发送端在发送 CBUS 地址后可以发送 CBUS 格式。
+所有设备都可以识别的START条件标志着传输结束。</p><blockquote><p>Note：</br>如果已知 CBUS 配置，并且不打算使用 CBUS 兼容设备进行扩展，设计者可以根据所用设备的特定要求调整保持时间。</p></blockquote><h4 id=a-id42-smbus---系统管理总线42-smbus---系统管理总线a><a id="4.2 smbus - 系统管理总线">4.2 SMBus - 系统管理总线</a></h4><p>SMBus使用I2C硬件和I2C硬件寻址，但增加了第二级软件用于构建特殊系统。
+特别是，它的规范包括一个地址解析协议，可以进行动态地址分配。</p><p>硬件和软件的动态重配置允许总线设备“热插拔”并立即使用，而无需重启系统。
+设备会被自动识别并分配唯一地址。这一优势使得即插即用的用户界面成为可能。
+在这两种协议中，对系统主机和系统中所有其他可以充当主机或者从机的设备之间进行了非常有用地区分。</p><p>SMBus今天作为大多数个人计算机中的系统管理总线使用。
+由英特尔等公司于1995年开发，它修改了一些I2C电气和软件特性，以更好地兼容便携设备快速下降的电源预算。
+SMBus还拥有一个“高功率”版本2.0，包含4 mA的漏电流，除非上拉电阻的大小达到I2C总线水平，否则I2C芯片无法驱动。</p><h5 id=a-id421-i2c和smbus的兼容性421-i2c和smbus的兼容性a><a id="4.2.1 i2c和smbus的兼容性">4.2.1 I2C和SMBus的兼容性</a></h5><p>SMBus和I2C协议基本相同：</br>SMBus控制器能够在协议层面上控制I2C设备，反之亦然。
+SMBus的时钟频率定义为10 kHz到100 kHz，而I2C可以在0 Hz到100 kHz、0 Hz到400 kHz、0 Hz到1 MHz和0 Hz到3.4 MHz之间变化，这取决于模式。
+这意味着在低于10 kHz运行的I2C总线不符合SMBus标准，因为SMBus设备可能会超时。</p><p>逻辑电平也略有不同：</br>对于SMBus，TTL的低电平为0.8 V，高电平为2.1 V，而I2C的电平为30%/70% V<sub>DD</sub> CMOS。如果V<sub>DD</sub> > 3.0 V并不是一个问题。
+如果I2C设备低于3.0 V，那么如果逻辑高/低电平未被正确识别，就可能会出现问题。</p><h5 id=a-id422-超时功能422-超时功能a><a id="4.2.2 超时功能">4.2.2 超时功能</a></h5><p>SMBus具有超时功能，当通信时间过长时会重置设备。
+这解释了最低时钟频率为10 kHz，以防止总线锁定。</p><p>I2C可以是‘DC’总线，意味着从机在主机访问它时会拉伸主机时钟，以进行某些例行操作。
+这通知主机，从机正忙，但不想失去通信。
+从机将在其任务完成后继续。</p><p>I2C总线协议对这种延迟的持续时间没有限制，而在SMBus系统中，延迟时间将限制在35毫秒内。
+SMBus协议假设如果某件事情花费的时间过长，那么意味着总线上出现了问题，所有设备必须重置以清除此状态。
+从机不允许将时钟保持在低电平状态过长时间。</p><h5 id=a-id423-smbus10-和-20的区别423-smbus10-和-20的区别a><a id="4.2.3 smbus1.0 和 2.0的区别">4.2.3 SMBus1.0 和 2.0的区别</a></h5><p>SMBus规范定义了两类电气特性：低功率和高功率。</p><p>第一类最初在SMBus 1.0和1.1规范中定义，主要针对智能电池，但也可以用于其他低功率设备。</p><p>2.0版本引入了一组替代的高功率电气特性。
+当需要更高的驱动能力时，例如在PCI扩展卡上的SMBus设备以及通过PCI连接器连接这些卡与系统板上的SMBus设备时，可使用这一类别。</p><p>设备可以由总线V<sub>DD</sub>供电，也可以由另一电源VBUS供电（例如智能电池），只要遵循其类的SMBus电气规格，它们就可以互操作。</p><p>NXP设备具有比SMBus 1.0更高的电气特性。主要区别在于电流下沉能力，V<sub>OL</sub> = 0.4 V。</p><ul><li>SMBus低功率 = 350 μA</li><li>SMBus高功率 = 4 mA</li><li>I2C总线 = 3 mA</li></ul><p>如果拉升电阻为3 mA，SMBus“高功率”设备和I2C总线设备将一起工作。<br>有关更多信息，请参见：<a href=http://www.smbus.org/>http://www.smbus.org/</a></p><h4 id=a-id43-pmbus---电源管理总线43-pmbus---电源管理总线a><a id="4.3 pmbus - 电源管理总线">4.3 PMBus - 电源管理总线</a></h4><p>PMBus 是一种在 SMBus 上实现电源转换器与系统主机之间通信的标准方式，以提供对电源转换器更智能的控制。
+PMBus 规范定义了一组标准的设备命令，使来自多个来源的设备具有相同的功能。
+PMBus 设备使用 SMBus 版本 1.1 及其扩展进行传输。<br>如需更多信息，请访问： <a href=https://pmbus.org/>https://pmbus.org/</a></p><h4 id=a-id44-智能平台管理接口44-智能平台管理接口a><a id="4.4 智能平台管理接口">4.4 智能平台管理接口</a></h4><p>智能平台管理接口（Intelligent Platform Management Interface - IPMI）定义了一种标准化、抽象化的基于消息的接口，用于智能平台管理硬件。
+IPMI还定义了用于描述平台管理设备及其特性的标准化记录。IPMI通过监控温度、电压、风扇和机壳入侵等参数来提高系统的可靠性。</p><p>IPMI提供了一般的系统管理功能，如自动警报、自动系统关机和重启、远程重启和电源控制。
+对智能平台管理硬件的标准化接口有助于预测和早期监控硬件故障以及故障诊断。</p><p>这个标准化的总线和协议用于扩展机壳内的管理控制、监控和事件传递：</p><ul><li>基于I2C。</li><li>多控制器。</li><li>简单的请求/响应协议。</li><li>使用IPMI命令集。</li><li>支持非IPMI设备。</li><li>物理上为I2C，但为只写（支持控制器的设备）；不需要热插拔。</li><li>使基础管理控制器（BMC）能够接受来自系统中其他管理控制器的IPMI请求消息。</li><li>允许非智能设备以及总线上的管理控制器。</li><li>BMC作为控制器使系统软件能够访问IPMB。</li></ul><p>硬件实现与软件实现隔离，因此可以在不进行任何软件更改的情况下添加新传感器和事件。。
+欲了解更多信息，请访问：<a href=https://www.intel.com/content/www/us/en/products/docs/servers/ipmi/ipmi-home.html>https://www.intel.com/content/www/us/en/products/docs/servers/ipmi/ipmi-home.html</a></p><h4 id=a-id45-高级电信计算架构advanced-telecom-computing-architecture---atca45-高级电信计算架构advanced-telecom-computing-architecturea><a id="4.5 高级电信计算架构（advanced telecom computing architecture - atca）">4.5 高级电信计算架构（Advanced Telecom Computing Architecture）</a></h4><p>高级电信计算架构（ATCA）是对紧凑型PCI（Compact PCI - cPCI）的后续方案，提供标准化的外形规格，
+具有更大的card面积、更大的间距和更大的电源供应，用于先进的机架安装电信硬件。
+它包括一种用于热管理的容错方案，该方案在电路板之间使用I2C总线通信。</p><p>高级电信计算架构（ATCA）得到了包括英特尔、朗讯和摩托罗拉等众多大型企业在内的100多家公司的支持。</p><p>对ATCA兼容的风扇控制有两种通用的合规方案：</p><ul><li>第一个是智能FRU（现场可更换单元），这意味着风扇控制将直接连接到IPMB（智能平台管理总线）；</li><li>第二个是管理型或非智能FRU。</li></ul><p>管理双I2C总线的要求中需要包含硬件和软件。这需要一个板载绝缘电源为电路供电，一个带有上升时间加速器的缓冲双I2C总线，以及三态能力。
+I2C主机必须能够支持多主机I2C双总线，并处理协议中列出的标准风扇命令集。
+此外，还需要板载温度报告、托盘能力报告、风扇关闭功能和非易失性存储。有关更多信息，请参考：
+<a href=https://www.picmg.org/openstandards/advancedtca/>https://www.picmg.org/openstandards/advancedtca/</a></p><h4 id=a-id46-显示数据通道display-data-channel---ddc46-显示数据通道display-data-channel---ddca><a id="4.6 显示数据通道（display data channel - ddc)）">4.6 显示数据通道（Display Data Channel - DDC)）</a></h4><p>显示数据通道（DDC）允许监视器或显示器向主机通报其身份和能力。
+DDC版本2的规范要求符合I2C总线标准模式规范，它支持显示器与主机之间的双向通信，使得可以控制监视器功能。
+例如图像的显示方式以及与连接到I2C总线的其他设备的通信。</p><p>有关更多信息，请参阅：<a href=https://vesa.org/>https://vesa.org/</a></p><h3 id=a-id第5章-总线速度第5章-总线速度a><a id="第5章 总线速度">第5章 总线速度</a></h3><p>最初I2C总线的操作速度限制为100 kbit/s。随着时间的推移，规范中增加了几个内容，现在有五种操作速度类别。
+标准模式（Sm）、快速模式（Fm）、快速模式增强版（Fm+）和高速模式（Hs-mode）。
+设备是向下兼容的——任何设备都可以在较低的总线速度下运行。超快速模式设备与之前的版本不兼容，因为总线是单向的。</p><ul><li>双向总线：<ul><li>标准模式（Sm），比特率高达100 kbit/s</li><li>快速模式（Fm），比特率高达400 kbit/s</li><li>快速模式增强版（Fm+），比特率高达1 Mbit/s</li><li>高速模式（Hs-mode），比特率高达3.4 Mbit/s。</li></ul></li><li>单向总线：<ul><li>超快速模式（UFm），比特率高达5 Mbit/s</li></ul></li></ul><h4 id=a-id51-快速模式51-快速模式a><a id="5.1 快速模式">5.1 快速模式</a></h4><p>快速模式设备的接收和传输速度最高可达400 kbit/s。
+最低要求是它们能够与400 kbit/s的传输同步；然后，它们可以延长<strong>SCL</strong>信号的LOW周期以减慢传输。
+<strong>SDA</strong>和<strong>SCL</strong>线路的协议、格式、逻辑电平和最大电容负载与标准模式I2C总线规范相同。
+快速模式设备向后兼容，可以在0到100 kbit/s的I2C总线系统中与标准模式设备通信。
+然而，标准模式设备不向前兼容；它们不应被纳入快速模式I2C总线系统，因为它们无法跟上更高的传输速率，会出现不可预测的状态。</p><p>与标准模式相比，快速模式I2C总线规范具有以下附加功能：</p><ul><li>最大比特率增加到400 kbit/s。</li><li>串行数据（<strong>SDA</strong>）和串行时钟（<strong>SCL</strong>）信号的时序已经调整。无需与其他总线系统（例如CBUS）兼容，
+因为它们无法以增加的比特率运行。</li><li>输入集成了尖峰抑制和在<strong>SDAH</strong>和<strong>SCLH</strong>输入处的施密特触发器。</li><li>快速模式设备的输出缓冲器包含<strong>SDA</strong>和<strong>SCL</strong>信号下降沿的斜率控制。</li><li>如果快速模式设备的电源关闭，<strong>SDA</strong>和<strong>SCL</strong> I/O引脚必须处于悬空状态，以免阻塞总线线路。</li></ul><p>连接到总线线路的外部上拉设备必须适应快速模式I2C总线较短的最大允许上升时间。
+对于高达200 pF的总线负载，每条总线线路的上拉设备可以是一个电阻；
+对于200 pF到400 pF之间的总线负载，
+上拉设备可以是一个电流源（最大3 mA）或一个开关电阻电路（见 <em><a href="#7.2.4 切换式pull-up电路">7.2.4 切换式pull-up电路</a></em> ）。</p><h4 id=a-id52-增强快速模式52-增强快速模式a><a id="5.2 增强快速模式">5.2 增强快速模式</a></h4><p>快速模式加（Fm+）设备提高了I2C总线传输速度和总线电容。
+Fm+设备能够以高达1 Mbit/s的比特率传输信息，在混合速度总线系统中与快速或标准模式设备完全向下兼容，以实现双向通信。
+与快速或标准模式系统保持相同的串行总线协议和数据格式。
+Fm+设备还提供比快速或标准模式设备更高的驱动电流，使其能够驱动更长和/或负载更重的总线，从而不需要使用总线缓冲器。</p><p>快速模式加部件中的驱动器足够强大，可以满足与标准模式部件相同的400 pF负载的快速模式加时序规范。
+为了向后兼容标准模式，它们对于标准模式部件的1 μs上升时间也具有一定的容忍度。
+在仅存在快速模式加部件的应用中，只要满足快速模式加的set-up时间、最小低电平时间和最小高电平时间，
+且下降时间和上升时间不超过标准模式的300 ns t<sub>f</sub>和1 μs t<sub>r</sub>规范，
+高驱动强度和对慢上升和下降时间的容忍性允许使用更大的总线电容。
+总线速度可以与负载电容进行权衡，以将最大电容增加约十倍。</p><h4 id=a-id53-高速模式53-高速模式a><a id="5.3 高速模式">5.3 高速模式</a></h4><p>高速模式（Hs模式）设备在I2C总线传输速度上提供了量子飞跃。
+Hs模式设备可以以高达3.4 Mbit/s的比特率传输信息，同时它们在混合速度总线系统中与快速模式增强、快速或标准模式（F/S）设备完全向下兼容，能够进行双向通信。
+唯一的例外是在Hs模式传输期间不进行仲裁和时钟同步，其他均与F/S模式系统保持相同的串行总线协议和数据格式。</p><h5 id=a-id531-高速模式传输531-高速模式传输a><a id="5.3.1 高速模式传输">5.3.1 高速模式传输</a></h5><p>为了实现高达3.4 Mbit/s的位传输，对常规I2C总线规范进行了以下改进：</p><ul><li>Hs模式主机对<strong>SDAH</strong>信号具有开漏输出缓冲器，并且在<strong>SCLH</strong>输出上具有开漏下拉和电流源上拉电路的组合。
+该电流源电路缩短了<strong>SCLH</strong>信号的上升时间。任何时候只有一个主机的电流源在Hs模式下启用。</li><li>在多主机系统的Hs模式传输中，不执行仲裁或时钟同步，这加快了位处理能力。仲裁程序始终在F/S模式中完成前一个控制器代码传输后结束。</li><li>Hs模式主机生成的串行时钟信号的高低比为1比2。这缓解了设置和保持时间的时序要求。</li><li>作为选择，Hs模式主机可以具有内置桥。在Hs模式传输期间，Hs模式设备的高速数据（<strong>SDAH</strong>）和高速串行时钟（<strong>SCLH</strong>）线
+通过此桥与F/S模式设备的<strong>SDA</strong>和<strong>SCL</strong>线路隔离。
+这减少了<strong>SDAH</strong>和<strong>SCLH</strong>线路的电容负载，从而导致更快的上升和下降时间。</li><li>Hs模式从机与F/S模式从机之间的唯一区别在于它们的操作速度。Hs模式从机在<strong>SCLH</strong>和<strong>SDAH</strong>输出上具有开漏输出缓冲器。
+<strong>SCLH</strong>引脚上的可选下拉晶体管可用于拉伸<strong>SCLH</strong>信号的LOW电平，但这仅在Hs模式传输中的确认位之后允许。</li><li>Hs模式设备的输入集成了尖峰抑制和在<strong>SDAH</strong>和<strong>SCLH</strong>输入处的施密特触发器。</li><li>Hs模式设备的输出缓冲器集成了<strong>SDAH</strong>和<strong>SCLH</strong>信号下降沿的斜率控制。</li></ul><p><a id="图 32">图 32</a> 显示了仅包含Hs模式设备的系统中的物理I2C总线配置。
+主机的<strong>SDA</strong>和<strong>SCL</strong>针脚仅在混合速度总线系统中使用，并且在仅Hs模式的系统中不连接。在这种情况下，这些引脚可以用于其他功能。</p><p>可选的串联电阻R<sub>s</sub>保护I2C总线设备的I/O阶段免受总线线上的高电压尖峰，并最小化振铃和干扰。</p><p>上拉电阻R<sub>p</sub>在总线处于空闲状态时将<strong>SDAH</strong>和<strong>SCLH</strong>线路保持在高电平，
+并确保信号在所需的上升时间内从低电平拉升到高电平。对于更高的电容总线负载（>100 pF），电阻R<sub>p</sub>可以由外部电流源上拉替代以满足上升时间要求。
+除非在确认位之后，Hs模式传输中的<strong>SCLH</strong>时钟脉冲的上升时间由活动控制器的内部电流源上拉电路MCS缩短。</p><p><a id="图 32">图 32
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_32._I2C-bus_configuration_with_Hs-mode_devices_only.png alt></a></p><h5 id=a-id532-高速模式下的串行数据格式532-高速模式下的串行数据格式a><a id="5.3.2 高速模式下的串行数据格式">5.3.2 高速模式下的串行数据格式</a></h5><p>串行数据传输格式在高速模式下符合标准模式I2C总线规范。在满足以下条件后，才能开始高速模式（所有条件均在频率/同步模式下）：</p><ol><li>START（S）</li><li>8位控制器代码（0b0000_1XXX）</li><li>不确认位（<span style=text-decoration:overline>A</span>）</li></ol><p><em><a href="#图 33">图 33</a></em> 和 <em><a href="#图 34">图 34</a></em> 对此进行了更详细的说明。
+该控制器代码有两个主要功能：</p><ul><li>它允许在频率/同步模式速度下进行竞争主机之间的仲裁和同步，从而产生一个获胜的主机。</li><li>它指示高速模式传输的开始。</li></ul><p>高速模式控制器代码是保留的8位代码，不用于从机寻址或其他用途。
+此外，由于每个主机都有其独特的控制器代码，因此最多可以在一个I2C总线系统上存在八个高速模式主机（尽管控制器代码0b0000_1000应保留用于测试和诊断目的）。
+高速模式主机的控制器代码是软件可编程的，由系统设计人员选择。</p><p>仲裁和时钟同步仅在控制器代码和不确认位（<span style=text-decoration:overline>A</span>）的传输过程中进行，之后一个获胜的主机保持活动状态。
+控制器代码向其他设备指示将开始高速模式传输，连接的设备必须符合高速模式规范。
+由于不允许任何设备确认控制器代码，因此控制器代码后跟一个不确认位（<span style=text-decoration:overline>A</span>）。</p><p>在不确认位（<span style=text-decoration:overline>A</span>）之后，<strong>SCLH</strong>线被拉升到高电平，活动主机切换到高速模式，
+并在时间t<sub>H</sub>处（见 <em><a href="#图 34">图 34</a></em> ）使<strong>SCLH</strong>信号的电流源上拉电路启用。
+由于其他设备可以通过拉伸<strong>SCLH</strong>信号的低电平来延迟串行传输，因此当所有设备释放<strong>SCLH</strong>线且<strong>SCLH</strong>信号达到高电平时，
+活动主机启用其电流源上拉电路，从而加速<strong>SCLH</strong>信号最后一部分的上升时间。</p><p>活动主机然后发送一个重复的START条件（Sr），后跟7位从机地址（或10位从机地址，见 <em><a href="#3.1.11 10-bit地址">3.1.11 10-bit地址</a></em> ）和一个读/写位地址，
+并从所选从机接收一个确认位（A）。</p><p>在重复的START条件之后，以及在每个确认位（A）或不确认位（<span style=text-decoration:overline>A</span>A）之后，活动主机禁用其电流源上拉电路。
+这使得其他设备能够通过拉伸<strong>SCLH</strong>信号的低电平来延迟串行传输。
+当所有设备释放且<strong>SCLH</strong>信号达到高电平时，活动主机再次启用其电流源上拉电路，从而加速<strong>SCLH</strong>信号最后一部分的上升时间。</p><p>数据传输在下一个重复的START（Sr）之后继续在高速模式下进行，并且仅在STOP条件（P）后切换回频率/同步模式。
+为了减少控制器代码的开销，主机可以链接多个高速模式传输，这些传输由重复的START条件（Sr）分隔。</p><p><a id="图 33">图 33
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_33._Data_transfer_format_in_Hs-mode.png alt></a></p><p><a id="图 34">图 34
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_34._A_complete_Hs-mode_transfer.png alt></a></p><h5 id=a-id533-fs模式和hs模式的转化533-fs模式和hs模式的转化a><a id="5.3.3 fs模式和hs模式的转化">5.3.3 FS模式和HS模式的转化</a></h5><p>在重置和初始化之后，Hs模式设备必须处于快速模式（这实际上是F/S模式，因为快速模式向下兼容标准模式）。
+每个Hs模式设备可以在快速模式和Hs模式之间切换，由I2C总线上的串行传输控制。</p><p>在 <em><a href="#图 34">图 3</a></em> 中的时间t<sub>1</sub>之前，每个连接的设备都在快速模式下运行。
+在t<sub>1</sub>和t<sub>H</sub>之间的这段时间（该时间间隔可以由任何设备拉长），每个连接的设备必须识别‘S/0b00001XXX/<span style=text-decoration:overline>A</span>’序列，
+并且必须将其内部电路从快速模式设置切换到Hs模式设置。
+在t<sub>1</sub>和t<sub>H</sub>之间，连接的主机和从机通过以下操作执行此切换。
+活动（获胜）主机：</p><ol><li>根据Hs模式中的尖峰抑制要求调整其<strong>SDAH</strong>和<strong>SCLH</strong>输入滤波器。</li><li>根据Hs模式要求调整建立时间和保持时间。</li><li>根据Hs模式要求调整其<strong>SDAH</strong>和<strong>SCLH</strong>输出级的斜率控制。</li><li>切换到Hs模式比特率，该比特率在时间t<sub>H</sub>之后是必需的。</li><li>在时间t<sub>H</sub>时使能其<strong>SCLH</strong>输出级的电流源上拉电路。</li></ol><p>非活动或失败的主机：</p><ol><li>根据Hs模式中的尖峰抑制要求调整其<strong>SDAH</strong>和<strong>SCLH</strong>输入滤波器。</li><li>等待STOP条件以检测总线何时再次空闲。</li></ol><p>所有从机：</p><ol><li>根据Hs模式中的尖峰抑制要求调整其<strong>SDAH</strong>和<strong>SCLH</strong>输入滤波器。</li><li>根据Hs模式要求调整建立时间和保持时间。该要求可能已经通过输入滤波器的适应得以满足。</li><li>如有必要，调整其<strong>SDAH</strong>输出级的斜率控制。
+对于从机，斜率控制仅适用于<strong>SDAH</strong>输出级，并且根据电路容差，快速模式和Hs模式的要求在不切换其内部电路的情况下都可能得以满足。</li></ol><p>在 <em><a href="#图 34">图 34</a></em> 中的时间t<sub>FS</sub>，连接的每个设备必须识别STOP条件（P），
+并将其内部电路从Hs模式设置切换回t<sub>1</sub>之前的快速模式设置。这必须在快速模式规范中规定的最小总线空闲时间内完成，如 <em><a href="#表 10">表 11</a></em> 所示。</p><h5 id=a-id534-较低速度下的高速模式534-较低速度下的高速模式a><a id="5.3.4 较低速度下的高速模式">5.3.4 较低速度下的高速模式</a></h5><p>Hs模式设备具有完全向下兼容性，可以连接到F/S模式I2C总线系统（见 <em><a href="#图 35">图 35</a></em> ）。
+由于在这种配置中不会传输控制器代码，因此所有Hs模式控制器设备保持在F/S模式，并以F/S模式速度进行通信，同时禁用其电流源。
+<strong>SDAH</strong>和<strong>SCLH</strong>引脚用于连接到F/S模式总线系统，
+允许Hs模式主机设备上的<strong>SDA</strong>和<strong>SCL</strong>引脚（如果存在）用于其他功能。</p><p><a id="图 35">图 35
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_35._Hs-mode_devices_at_FS-mode_speed.png alt></a></p><h5 id=a-id535-串行总线系统上的混合模式535-串行总线系统上的混合模式a><a id="5.3.5 串行总线系统上的混合模式">5.3.5 串行总线系统上的混合模式</a></h5><p>如果一个系统中有Hs模式、快速模式和/或标准模式设备的组合，可以通过使用互联桥，
+在不同设备之间实现不同的比特率（见 <em><a href="#图 36">图 36</a></em> 和 <em><a href="#图 37">图 37</a></em> ）。</p><p>在适当的时间，需要一个桥来连接/断开Hs模式部分与F/S模式部分。该桥包括一个电平转换功能，允许具有不同供电电压的设备连接。
+例如，V<sub>VDD2</sub>为5V的F/S模式设备可以连接到V<sub>DD1</sub>为3V或更低的Hs模式设备（即V<sub>DD2</sub> ≥ V<sub>DD1</sub>），
+前提是<strong>SDA</strong>和<strong>SCL</strong>引脚耐受5V。
+该桥被包含在Hs模式主机设备中，并完全由串行信号<strong>SDAH</strong>、<strong>SCLH</strong>、<strong>SDA</strong>和<strong>SCL</strong>控制。
+这样的桥可以作为自治电路在任何集成电路中实现。</p><p>TR1、TR2和TR3是N沟道晶体管。TR1和TR2具有传输门功能，而TR3是一个开漏下拉级。
+如果TR1或TR2被打开，它们将双向传输低电平，否则当漏极和源极电平上升到高电平时，每个已开启晶体管的漏极和源极之间有高阻抗。
+在后一种情况下，晶体管作为电平转换器，因为<strong>SDAH</strong>和<strong>SCLH</strong>拉高到V<sub>DD1</sub>，
+<strong>SDA</strong>和<strong>SCL</strong>被拉高到V<sub>DD2</sub>。</p><p>在F/S模式下，连接在一个Hs模式主机上的桥将<strong>SDAH</strong>和<strong>SCLH</strong>线连接到相应的<strong>SDA</strong>和<strong>SCL</strong>线，
+从而允许Hs模式设备以较慢的速度与F/S模式设备进行通信。正如 <em><a href="#3.1.7 时钟同步">3.1.7 时钟同步</a></em> 所述，
+在所有连接设备之间的F/S模式传输过程中，仲裁和同步都是可能的。
+然而，在Hs模式传输过程中，桥打开以分离两个总线部分，并允许Hs模式设备在3.4 Mbit/s下相互通信。
+Hs模式设备与F/S模式设备之间的仲裁仅在控制器代码（0b0000_1XXX）期间执行，并通常由一个Hs模式主机赢得，因为没有从机地址具有四个前导零。
+其他控制器只有在发送保留的8位代码（0b0000_0XXX）时才能赢得仲裁。在这种情况下，桥保持关闭，传输以F/S模式进行。
+<em><a href="#表 9">表 9</a></em> 给出了该系统中可能的通信速度。</p><p><a id="图 36">图 36
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_36._Bus_system_with_transfer_at_Hs-mode_and_FS-mode_speeds.png alt></a></p><p><a id="表 9">表 9
+<img src=https://icjj.github.io/icer/img/post/i2c/Table_9._Communication_bit_rates_in_a_mixed-speed_bus_system.png alt></a></p><blockquote><p>Note：</br><em><a href="#表 9">表 9</a></em> 假设Hs设备在以3.4 Mbit/s操作时与Fm和Sm设备隔离。总线速度始终受到连接到总线的最慢设备的最大通信速率的限制。</p></blockquote><h5 id=a-id536-混合速度总线中的标准快速增强快速传输536-混合速度总线中的标准快速增强快速传输a><a id="5.3.6 混合速度总线中的标准、快速、增强快速传输">5.3.6 混合速度总线中的标准、快速、增强快速传输</a></h5><p><em><a href="#图 36">图 36</a></em> 所示的桥接器连接了相应的串行总线线，形成了一个串行总线系统。
+由于没有控制器代码（0b0000_1XXX）被传输，电流源上拉电路保持禁用，所有输出级为开漏状态。
+所有设备，包括Hs模式设备，按照协议、格式和F/S模式I2C总线规范的速度进行相互通信。</p><h5 id=a-id537-混合速度总线中的高速传输537-混合速度总线中的高速传输a><a id="5.3.7 混合速度总线中的高速传输">5.3.7 混合速度总线中的高速传输</a></h5><p><em><a href="#图 37">图 37</a></em> 显示了完整的Hs模式传输的时序图，
+此传输由START条件、控制器代码和不确认<span style=text-decoration:overline>A</span>（在F/S模式速度下）被调用。
+尽管这个时序图被分为两个部分，但它应该被视为一个时序图，其中时间点t<sub>H</sub>是两个部分的共通点。
+控制器代码被桥接电路在活动或不活动的控制器中识别（见 <em><a href="#图 36">图 36</a></em> ）。桥接电路执行以下操作：</p><ol><li>在t<sub>1</sub>和t<sub>H</sub>之间（见 <em><a href="#图 37">图 37</a></em> ），
+晶体管TR1打开以分离<strong>SDAH</strong>和<strong>SDA</strong>线，然后晶体管TR3关闭，将<strong>SDA</strong>线拉低到V<sub>SS</sub>。</li><li>当<strong>SCLH</strong>和<strong>SCL</strong>都变为高电平时（图37中的t<sub>H</sub>），
+晶体管TR2打开以分离<strong>SCLH</strong>和<strong>SCL</strong>线。TR2必须在<strong>SCLH</strong>在Sr之后变为低电平之前打开。</li></ol><p>Hs模式传输在t<sub>H</sub>后以重复的START条件（Sr）开始。
+在Hs模式传输期间，<strong>SCL</strong>线保持在高电平，而<strong>SDA</strong>线保持在低电平稳态水平，因此为传输START条件（P）做好准备。
+在每个确认（A）或不确认位（<span style=text-decoration:overline>A</span>）之后，活动控制器禁用其当前源拉升电路。
+这使得其他设备能够通过拉伸<strong>SCLH</strong>信号的低电平周期来延迟串行传输。
+当所有设备被释放且<strong>SCLH</strong>信号达到高电平时，活动控制器再次启用其当前源拉升电路，从而加快<strong>SCLH</strong>信号上升时间的最后部分。
+在不规则情况下，F/S模式设备可以通过将<strong>SCL</strong>线拉低至少1μs任意关闭桥接电路（TR1和TR2关闭，TR3打开），例如，以恢复总线挂起的情况。</p><p>Hs模式以STOP条件结束，并将总线系统恢复到F/S模式。
+当检测到<strong>SDAH</strong>上的STOP条件（P）时，活动控制器禁用其当前源MCS（<em><a href="#图 37">图 37</a></em> 中的t<sub>FS</sub>）。
+桥接电路也识别这个STOP条件，并采取以下行动：</p><ol><li>晶体管TR2在t<sub>FS</sub>后关闭，以将<strong>SCLH</strong>与<strong>SCL</strong>连接；
+此时两者都是高电平。晶体管TR3在t<sub>FS</sub>后打开，释放<strong>SDA</strong>线并允许其被拉高，由拉升电阻R<sub>p</sub>拉高。
+这是F/S模式设备的STOP条件。TR3必须快速打开，以确保STOP条件与下一个最早的START条件之间的总线空闲时间符合快速模式规范
+（见 <em><a href="#表 11">表 11</a></em> 中的t<sub>BUF</sub>）。</li><li>当<strong>SDA</strong>达到高电平时（ <em><a href="#图 37">图 37</a></em> 中的t<sub>2</sub>），
+晶体管TR1关闭以连接<strong>SDAH</strong>和<strong>SDA</strong>。（注意：当所有线路为高电平时会进行互连，从而防止总线线上的尖峰。）
+TR1和TR2必须在符合快速模式规范的最小总线空闲时间内关闭（见 <em><a href="#表 11">表 11</a></em> 中的t<sub>BUF</sub>）。</li></ol><p><a id="图 37">图 37
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_37._A_complete_Hs-mode_transfer_in_a_mixed-speed_bus_system.png alt></a></p><h5 id=a-id538-混合速度总线中桥接器的时序要求538-混合速度总线中桥接器的时序要求a><a id="5.3.8 混合速度总线中桥接器的时序要求">5.3.8 混合速度总线中桥接器的时序要求</a></h5><p>从 <em><a href="#图 37">图 37</a></em> 可以看出，桥接器在t<sub>1</sub>，t<sub>H</sub>和t<sub>FS</sub>时的动作必须非常迅速，
+以至于不影响<strong>SDAH</strong>和<strong>SCLH</strong>线。
+此外，桥接器还必须满足<strong>SDA</strong>和<strong>SCL</strong>线快速模式规范的相关时序要求。</p><h4 id=a-id54-超快速模式54-超快速模式a><a id="5.4 超快速模式">5.4 超快速模式</a></h4><p>超高速模式（UFm）设备提供了I2C总线传输速度的提升。
+UFm设备可以以最高5 Mbit/s的比特率传输信息。UFm设备提供推挽驱动器，消除了上拉电阻，允许更高的传输速率。
+与Sm、Fm或Fm+系统一样，串行总线协议和数据格式保持不变。UFm总线设备与双向I2C总线设备不兼容。</p><h3 id=a-id第6章-io阶段和总线线路的电气规格和时序第6章-io阶段和总线线路的电气规格和时序a><a id="第6章 i/o阶段和总线线路的电气规格和时序">第6章 I/O阶段和总线线路的电气规格和时序</a></h3><h4 id=a-id61-标准快速快速加模式设备61-标准快速快速加模式设备a><a id="6.1 标准、快速、快速加模式设备">6.1 标准、快速、快速加模式设备</a></h4><p>I/O levels、I/O current、spike suppression、输出slope控制和引脚电容见 <em><a href=#表10>表10</a></em> 。</p><p>I2C总线时序特性、总线线电容和噪声余量见 <em><a href="#表 10">表 10</a></em> 。</p><p><em><a href="#图 38">图 38</a></em> 显示了I2C总线的时序定义。
+<em><a href="#表 10">表 10</a></em> 中指定的<strong>SCL</strong>时钟的最小高低电平持续时间决定了标准模式设备的最大比特传输速率为 100 kbit/s。
+快速模式设备为400kbit/s和快速模式加速为1000kbit/s设备必须能够以其自身的最大比特速率跟随传输。
+无论是能够以该速度发送或接收还是通过应用 <em><a href="#3.1.7 时钟同步">3.1.7 时钟同步</a></em>
+中描述的时钟同步程序强制主机进入等待状态并拉伸<strong>SCL</strong>信号的低电平持续时间。在后者的情况下，比特传输速率降低。</p><p><a id="表 10">表 10</a> <strong>SDA</strong>和<strong>SCL</strong> I/O阶段的特征</br></p><table><thead><tr><th>Symbol</th><th>Parameter</th><th>Conditions</th><th>Sm-Min</th><th>Sm-Max</th><th>Fm-Min</th><th>Fm-Max</th><th>Fm+-Min</th><th>Fm+-Max</th><th>Unit</th></tr></thead><tbody><tr><td>V<sub>IL</sub></td><td>LOW-level input voltage <sup><em><a href=#[12]>[12]</a></em></sup></td><td></td><td>-0.5</td><td>0.3V<sub>DD</sub></td><td>-0.5</td><td>0.3V<sub>DD</sub></td><td>-0.5</td><td>0.3V<sub>DD</sub></td><td>V</td></tr><tr><td>V<sub>IH</sub></td><td>HIGH-level input voltage <sup><em><a href=#[12]>[12]</a></em></sup></td><td></td><td>0.7V<sub>DD</sub></td><td><sup><em><a href=#[13]>[13]</a></em></sup></td><td>0.7V<sub>DD</sub></td><td><sup><em><a href=#[13]>[13]</a></em></sup></td><td>0.7V<sub>DD</sub> <sup><em><a href=#[12]>[12]</a></em></sup></td><td><sup><em><a href=#[13]>[13]</a></em></sup></td><td>V</td></tr><tr><td>V<sub>hys</sub></td><td>hysteresis（滞后） of Schmitt trigger inputs</td><td></td><td>-</td><td>-</td><td>0.05V<sub>DD</sub></td><td>-</td><td>0.05V<sub>DD</sub></td><td>-</td><td>V</td></tr><tr><td>V<sub>OL1</sub></td><td>LOW-level output voltage 1</td><td>(open-drain or open-collector) at 3 mA sink current; V<sub>DD</sub> > 2V</td><td>0</td><td>0.4</td><td>0</td><td>0.4</td><td>0</td><td>0.4</td><td>V</td></tr><tr><td>V<sub>OL2</sub></td><td>LOW-level output voltage 2</td><td>(open-drain or open-collector) at 2 mA sink current <sup><em><a href=#[14]>[14]</a></em> </sup>; V<sub>DD</sub> ≤ 2V</td><td>-</td><td>-</td><td>0</td><td>0.2V<sub>DD</sub></td><td>0</td><td>0.2V<sub>DD</sub></td><td>V</td></tr><tr><td>I<sub>OL</sub></td><td>LOW-level output current</td><td>V<sub>OL</sub> = 0.4 V</td><td>3</td><td>-</td><td>3</td><td>-</td><td>20</td><td>-</td><td>mA</td></tr><tr><td>I<sub>OL</sub></td><td>LOW-level output current</td><td>V<sub>OL</sub> = 0.6V <sup><em><a href=#[15]>[15]</a></em></sup></td><td>-</td><td>-</td><td>6</td><td>-</td><td>-</td><td>-</td><td>mA</td></tr><tr><td>t<sub>of</sub></td><td>output fall time from V<sub>IHmin</sub> to V<sub>ILmax</sub></td><td></td><td>-</td><td>250 <sup><em><a href=#[16]>[16]</a></em></sup></td><td>20 × (V<sub>DD</sub>/5.5V) <sup><em><a href=#[16]>[17]</a></em></sup></td><td>250 <sup><em><a href=#[16]>[16]</a></em></sup></td><td>20 × (V<sub>DD</sub>/5.5V) <sup><em><a href=#[17]>[17]</a></em></sup></td><td>120 <sup><em><a href=#[18]>[18]</a></em></sup></td><td>ns</td></tr><tr><td>t<sub>SP</sub></td><td>pulse width of spikes that must be suppressed by the input filter</td><td></td><td>-</td><td>-</td><td>0</td><td>50 <sup><em><a href=#[19]>[19]</a></em></sup></td><td>0</td><td>50 <sup><em><a href=#[19]>[19]</a></em></sup></td><td>ns</td></tr><tr><td>I<sub>i</sub></td><td>input current each I/O pin</td><td>0.1V<sub>DD</sub> &lt; V<sub>I</sub> &lt; 0.9V<sub>DDmax</sub></td><td>-10</td><td>+10</td><td>-10 <sup><em><a href=#[20]>[20]</a></em></sup></td><td>+10 <sup><em><a href=#[20]>[20]</a></em></td><td>-10 <sup><em><a href=#[20]>[20]</a></em></td><td>+10 <sup><em><a href=#[20]>[20]</a></em></td><td>μA</td></tr><tr><td>C<sub>i</sub></td><td>capacitance for each I/O pin <sup><em><a href=#[21]>[21]</a></em></td><td></td><td>-</td><td>10</td><td>-</td><td>10</td><td>-</td><td>10</td><td>pF</td></tr></tbody></table><p><a id=[12]>[12]</a> ：一些传统标准模式设备的输入电平固定为 V<sub>IL</sub> = 1.5 V 和 V<sub>IH</sub> = 3.0 V。请参阅元件数据手册。<br><a id=[13]>[13]</a> ：最大 V<sub>IH</sub> = V<sub>DDmax</sub> + 0.5 V 或 5.5 V，以较低者为准。请参阅元件数据手册。<br><a id=[14]>[14]</a> ：在 3.0 V V<sub>DD</sub> 下驱动 3 mA 的相同电阻值在使用 &lt;2 V V<sub>DD</sub> 和较小电流时提供相同的 RC 时间常数。<br><a id=[15]>[15]</a> ：为了在 400 kHz 驱动满总线负载，在 0.6 V V<sub>OL</sub> 下需要 6 mA I<sub>DD</sub>。不符合此规格的部件仍然可以工作，但无法在 400 kHz 和 400 pF 下工作。<br><a id=[16]>[16]</a> ：<em><a href="#表 11">表 11</a></em> 中引用的<strong>SDA</strong>和<strong>SCL</strong>总线线的最大
+t<sub>f</sub>（300 ns）比输出级指定的最大 t<sub>of</sub>（250 ns）要长。这允许保护电阻（R<sub>s</sub>）串联连接
+在 <strong>SDA</strong>/<strong>SCL</strong> 引脚和 <strong>SDA</strong>/<strong>SCL</strong> 总线线之间，
+如 <em><a href="#图 45">图 45</a></em> 所示，而不超过规定的最大 t<sub>f</sub>。<br><a id=[17]>[17]</a> ：必须向后兼容快速模式。
+<a id=[18]>[18]</a> ：在快速模式加速中，下降时间对输出级和总线时序是相同的。如果使用串联电阻，设计人员在考虑总线时序时应考虑这一点。
+<a id=[19]>[19]</a> ：<strong>SDA</strong>和<strong>SCL</strong>输入上的输入滤波器抑制小于50ns的噪声尖峰。
+<a id=[20]>[20]</a> ：如果V<sub>DD</sub>关闭，快速模式和快速模式加速设备的I/O引脚不得阻碍<strong>SDA</strong>和<strong>SCL</strong>线路。
+<a id=[21]>[21]</a> ：诸如多路复用器和开关等特殊用途设备可能会超过此电容，因为它们将多个路径连接在一起。</p><p><a id="表 11">表 11</a> Sm、Fm、Fm+下<strong>SDA</strong>和<strong>SCL</strong> I/O阶段的特征</br>所有值均指V<sub>IH(min)</sub> (0.7V<sub>DD</sub>)和V<sub>IL(max)</sub> (0.3V<sub>DD</sub>)水平。</p><table><thead><tr><th>Symbol</th><th>Parameter</th><th>Conditions</th><th>Sm-Min</th><th>Sm-Max</th><th>Fm-Min</th><th>Fm-Max</th><th>Fm+-Min</th><th>Fm+-Max</th><th>Unit</th></tr></thead><tbody><tr><td>f<sub>SCL</sub></td><td>SCL clock frequency</td><td></td><td>0</td><td>100</td><td>0</td><td>400</td><td>0</td><td>1000</td><td>kHz</td></tr><tr><td>t</sub>HD;STA</sub></td><td>hold time (repeated) START</td><td>After this period, the first clock pulse is generated.</td><td>4.0</td><td>-</td><td>0.6</td><td>-</td><td>0.26</td><td>-</td><td>μs</td></tr><tr><td>t<sub>LOW</sub></td><td>LOW period of the SCL clock</td><td></td><td>4.7</td><td>-</td><td>1.3</td><td>-</td><td>0.5</td><td>-</td><td>μs</td></tr><tr><td>t<sub>HIGH</sub></td><td>HIGH period of the SCL clock</td><td></td><td>4.0</td><td>-</td><td>0.6</td><td>-</td><td>0.26</td><td>-</td><td>μs</td></tr><tr><td>t<sub>SU;STA</sub></td><td>set-up time for a repeated START condition</td><td></td><td>4.7</td><td>-</td><td>0.6</td><td>-</td><td>0.26</td><td>-</td><td>μs</td></tr><tr><td>t<sub>HD;DAT</sub></td><td>data hold time <sup><em><a href=#[22]>[22]</a></em></sup></td><td>CBUS compatible controllers (see Remark in <em><a href="#4.1 cbus兼容性">4.1 cbus兼容性</a></em> Section 4.1)</td><td>5.0</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>μs</td></tr><tr><td>t<sub>HD;DAT</sub></td><td>data hold time <sup><em><a href=#[22]>[22]</a></em></sup></td><td>I2C-bus devices</td><td>0 <sup><em><a href=#[23]>[23]</a></em></sup></td><td>- <sup><em><a href=#[24]>[24]</a></em></sup></td><td>0 <sup><em><a href=#[23]>[23]</a></em></sup></td><td>- <sup><em><a href=#[24]>[24]</a></em></sup></td><td>0</td><td>-</td><td>μs</td></tr><tr><td>t<sub>SU;DAT</sub></td><td>data set-up time</td><td></td><td>250</td><td>-</td><td>100 <sup><em><a href=#[25]>[25]</a></em></sup></td><td>-</td><td>50</td><td>-</td><td>ns</td></tr><tr><td>t<sub>r</sub></td><td>rise time of both <strong>SDA</strong> and <strong>SCL</strong> signals</td><td></td><td>-</td><td>1000</td><td>20</td><td>300</td><td>-</td><td>120</td><td>ns</td></tr><tr><td>t<sub>f</sub></td><td>fall time of both <strong>SDA</strong> and <strong>SCL</strong> signals <sup><em><a href=#[23]>[23]</a></em> </sup><sup><em><a href=#[26]>[26]</a></em> </sup><sup><em><a href=#[27]>[27]</a></em> </sup><sup><em><a href=#[28]>[28]</a></em></sup></td><td>-</td><td>300</td><td>20 × (V<sub>DD</sub>/5.5V)</td><td>300</td><td>20 × (V<sub>DD</sub>/5.5V) <sup><em><a href=#[29]>[29]</a></em></sup></td><td>120 <sup><em><a href=#[28]>[28]</a></em></sup></td><td>ns</td><td></td></tr><tr><td>t<sub>SU;STO</sub></td><td>set-up time for STOP condition</td><td></td><td>4.0</td><td>-</td><td>0.6</td><td>-</td><td>0.26</td><td>-</td><td>μs</td></tr><tr><td>t<sub>BUF</sub></td><td>bus free time between a STOP and START condition</td><td></td><td>4.7</td><td>-</td><td>1.3</td><td>-</td><td>0.5</td><td>-</td><td>μs</td></tr><tr><td>C<sub>b</sub></td><td>capacitive load for each bus line <sup><em><a href=#[30]>[30]</a></em></sup></td><td></td><td>-</td><td>400</td><td>-</td><td>400</td><td>-</td><td>550</td><td>pF</td></tr><tr><td>t<sub>VD;DAT</sub></td><td>data valid time <sup><em><a href=#[31]>[31]</a></em></sup></td><td></td><td>-</td><td>3.45 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>-</td><td>0.9 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>-</td><td>0.45 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>μs</td></tr><tr><td>t<sub>VD;ACK</sub></td><td>data valid acknowledge time <sup><em><a href=#[32]>[32]</a></em></sup></td><td></td><td>-</td><td>3.45 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>-</td><td>0.9 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>-</td><td>0.45 <sup><em><a href=#[24]>[24]</a></em></sup></td><td>μs</td></tr><tr><td>V<sub>nL</sub></td><td>noise margin at the LOW level</td><td>for each connected device (including hysteresis)</td><td>0.1V<sub>DD</sub></td><td>-</td><td>0.1V<sub>DD</sub></td><td>-</td><td>0.1V<sub>DD</sub></td><td>-</td><td>V</td></tr><tr><td>V<sub>nH</sub></td><td>noise margin at the HIGH level</td><td>for each connected device (including hysteresis)</td><td>0.2V<sub>DD</sub></td><td>-</td><td>0.2V<sub>DD</sub></td><td>-</td><td>0.2V<sub>DD</sub></td><td>-</td><td>V</td></tr></tbody></table><p><a id=[22]>[22]</a> ：t<sub>HD;DAT</sub> 是从<strong>SCL</strong>的下降沿测量的数据保持时间，适用于传输中的数据和确认。<br><a id=[23]>[23]</a> ：在<strong>SDA</strong>进入0.3V<sub>DD</sub>到0.7V<sub>DD</sub>的不确定范围之前，
+确保<strong>SCL</strong>在下降沿时降到0.3V<sub>DD</sub>以下。注意：对于无法观察V<sub>DD</sub>下降沿的控制器，
+应该独立测量<strong>SCL</strong>从静态高电平(V<sub>DD</sub>)到0.3V<sub>DD</sub>的过渡时间，以便在<strong>SDA</strong>过渡时插入相应的延迟。<br><a id=[24]>[24]</a> ：最大t<sub>HD;DAT</sub>可以为标准模式下的3.45μs和快速模式下的0.9μs，
+但必须小于t<sub>VD;DAT</sub>或t<sub>VD;ACK</sub>的最大值加上过渡时间。只有在设备不拉伸<strong>SCL</strong>信号的低电平(t<sub>LOW</sub>)的情况下，
+这个最大值才能满足。如果时钟拉伸了<strong>SCL</strong>，数据必须在时钟释放之前在设置时间内保持有效。<br><a id=[25]>[25]</a> ：快速模式I2C总线设备可以在标准模式I2C总线系统中使用，但必须满足t<sub>SU;DAT</sub>=250ns。
+如果设备不拉伸<strong>SCL</strong>信号的低电平，则自动满足这一要求。如果这样的设备确实拉伸了<strong>SCL</strong>信号的低电平，
+它必须在<strong>SCL</strong>信号释放之前将下一个数据位输出到<strong>SDA</strong>线。
+t<sub>r(max)</sub> + t<sub>SU;DAT</sub> = 1000 + 250 = 1250 ns（符合标准模式 I2C 总线规范）。确认时序也必须满足这个设置时间。<br><a id=[26]>[26]</a> ：如果与 Hs 模式设备混合使用，则根据 <em><a href=#表10>表10</a></em> 允许更快的下降时间。<br><a id=[27]>[27]</a> ：<strong>SDA</strong>和<strong>SCL</strong>总线线的最大t<sub>f</sub>规定为 300 ns。
+<strong>SDA</strong>输出级的最大下降时间 t<sub>f<sub> 规定为 250 ns。
+这允许在<strong>SDA</strong>和<strong>SCL</strong>引脚及<strong>SDA</strong>/<strong>SCL</strong>总线线之间连接串联保护电阻，
+而不超过规定的最大 t<sub>f</sub>。<br><a id=[28]>[28]</a> ：在快速模式加模式中，下降时间对于输出阶段和总线时序是相同的。如果使用了串联电阻，设计人员应在考虑总线时序时考虑到这一点。<br><a id=[29]>[29]</a> ：需要向后兼容快速模式。<br><a id=[30]>[30]</a> ：最大允许总线电容可能根据实际工作电压和应用的频率不同于该值。
+<em><a href="#7.2 超出最大允许电容运行">7.2 超出最大允许电容运行</a></em> 讨论了应对较高总线电容的技术。<br><a id=[31]>[31]</a> ：t<sub>VD;DAT</sub> = 数据信号从<strong>SCL</strong>低电平到<strong>SDA</strong>输出（高或低，取决于哪个更差）的时间。<br><a id=[32]>[32]</a> ：t<sub>VD;ACK</sub> = 确认信号从<strong>SCL</strong>低电平到<strong>SDA</strong>输出（高或低，取决于哪个更差）的时间。</p><p><a id="图 38">图 38
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_38._Definition_of_timing_for_FS-mode_devices_on_the_I2C-bus.png alt></a></p><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
