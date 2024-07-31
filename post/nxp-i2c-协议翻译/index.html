@@ -137,7 +137,39 @@ STOP条件由主机生成，主机在STOP条件之前发送一个nack（<span st
 需要一次打开一个通道依次读取每个单独设备的配置以确认传输结果。细节请参阅各个组件的数据表。</li></ol><p><a id="图 11">图 11
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_11._A_controller-transmitter_addressing_a_target_receiver_with_a_7-bit_address_%28the_transfer_direction_is_not_changed%29.png alt></a></p><p><a id="图 12">图 12
 <img src=https://icjj.github.io/icer/img/post/i2c/Figure_12._A_controller_reads_a_target_immediately_after_the_first_byte.png alt></a></p><p><a id="图 13">图 13
-<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt></a></p><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt></a></p><h5 id=a-id3111-bit-bit-地址3111-bit-bit-地址a><a id="3.1.11 bit-bit 地址">3.1.11 bit-bit 地址</a></h5><p>10位寻址扩展了可能的地址数量。设备可以使用7位和10位地址连接到同一个I2C总线。
+7位和10位寻址可以在所有总线速度模式下使用。目前10位寻址并未被广泛使用。</p><p>10位从机地址由START条件S或重复START条件Sr后的前两个字节组成。</p><p>第一个字节的前七位是0b1111_0XX组合，其中最后两位XX是10位地址的两个最高有效位。第一个字节的第八位是（R<span style=text-decoration:overline>w</span>）位用于确定消息的方向。</p><p>虽然保留的地址位0b1111_XXX有八种可能的组合，但只有四种组合的0b1111_0XX用于10位寻址。剩余的四种组合0b1111_1XX保留用于未来I2C总线的增强。</p><p>之前描述的7位寻址的所有读写格式组合在10位寻址中都是可能的。这里详细说明两种：</p><ul><li>主机发送端向10位从机地址的从机接收端发送数据，传输方向不变 <em><a href="#图 14">图 14</a></em> 。
+当10位地址跟在START条件后时，每个从机都会将从机地址第一个字节的前七位0b1111_0XX与自己的地址进行比较，并检查第八位（R<span style=text-decoration:overline>w</span>）方向位是否为0。
+可能会有多个从机发现匹配并产生应答A1。所有发现匹配的从机都会将从机地址第二个字节的八位XXXX_XXXX与自己的地址进行比较。
+但只有一个从机会发现匹配并产生应答A2，匹配的从机将一直被主机寻址直到它收到STOP条件P或者跟随不同从机地址的重复START条件Sr。</li><li>主机接收端从10位从机地址的从机发送端读取数据，传输方向在第二个（R<span style=text-decoration:overline>w</span>）位之后改变 <em><a href="#图 15">图 15</a></em> ，
+应答位A2的过程与主机发送端第一次寻址从机接收端的过程相同。
+在重复START条件Sr之后匹配的从机会记住它之前被寻址过。该从机然后检查Sr之后从机地址第一个字节的前七位是否与从前START条件S之后的相同，
+并检查第八位（R<span style=text-decoration:overline>w</span>）位是否为1，如果匹配，则认为它已被寻址为从机发送端并产生应答A3。
+从机发送端将一直被寻址直到它收到STOP条件P或者直到它收到跟随不同从机地址的另一个重复START条件Sr。
+在重复START条件Sr之后所有其他从机也将比较从机地址第一个字节的前七位0b1111_0XX与自己的地址，并检查第八位（R<span style=text-decoration:overline>w</span>）位。
+然而它们可能都不会被寻址，因为即使10位从机地址的（R<span style=text-decoration:overline>w</span>）为1，但0b1111_0XX从机地址对于7位设备不匹配。</li></ul><p>10位地址从机响应通用广播地址 <em><a href="#3.1.12 通用广播地址">3.1.12 通用广播地址</a></em> 的方式与7位地址从机的操作相同。
+主机可以在通用广播地址之后传输其10位地址。
+在这种情况下，通用广播地址字节之后跟随两个连续字节，包含主机发送端的10位地址。
+格式如 <em><a href="#图 15">图 15</a></em> 所示，其中第一个数据字节包含主机地址的八个位权重最低的位。</p><p>START字节 0b0000_0001（0h1）可以像7位寻址一样位于10位寻址之前（见 <em><a href="#3.1.15 start 字节">3.1.15 START 字节</a></em> ）。</p><p><a id="图 14">图 14
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_14._A_controller-transmitter_addresses_a_target-receiver_with_a_10-bit_address.png alt></a></p><p><a id="图 15">图 15
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_15._A_controller-receiver_addresses_a_target-transmitter_with_a_10-bit_address.png alt></a></p><h5 id=a-id3112-保留地址3112-保留地址a><a id="3.1.12 保留地址">3.1.12 保留地址</a></h5><p>两组8位地址（0b0000_XXX（R<span style=text-decoration:overline>w</span>） 和 0b1111_XXX（R<span style=text-decoration:overline>w</span>））为 <em><a href="#表 4">表 4</a></em> 中显示的目的保留：</p><p><a id="表 4">表 4</a> 保留地址</br>X = 不关心；1 = HIGH；0 = LOW</p><table><thead><tr><th>目标地址</th><th>读写位</th><th>描述</th></tr></thead><tbody><tr><td>0b0000_000</td><td>0</td><td>通用广播地址 <sup><em><a href=#[7]>[7]</a></em></sup></td></tr><tr><td>0b0000_000</td><td>1</td><td>START字节 <sup><em><a href=#[8]>[8]</a></em></sup></td></tr><tr><td>0b0000_001</td><td>X</td><td>CBUS 地址 <sup><em><a href=#[9]>[9]</a></em></sup></td></tr><tr><td>0b0000_010</td><td>X</td><td>保留以备不同总线格式 <sup><em><a href=#[10]>[10]</a></em></sup></td></tr><tr><td>0b0000_011</td><td>X</td><td>保留以备未来使用</td></tr><tr><td>0b0000_1XX</td><td>X</td><td>高速模式控制器代码</td></tr><tr><td>0b1111_1XX</td><td>1</td><td>设备ID</td></tr><tr><td>0b1111_0XX</td><td>X</td><td>10位目标寻址</td></tr></tbody></table><p><a id=[7]>[7]</a> :广播地址用于多个功能，包括软件复位。<br><a id=[8]>[8]</a> :没有设备可以在接收START字节时进行应答。<br><a id=[9]>[9]</a> :CBUS一种三线制总线，地址已被保留，以便在同一系统中混合CBUS兼容设备和I2C总线兼容设备。I2C总线兼容设备在接收此地址时不允许响应。<br><a id=[10]>[10]</a> :为不同总线格式保留的地址是为了允许 I2C 和其他协议的混合。只有能够与此类格式和协议一起工作的 I2C 总线兼容设备才被允许响应此地址。</p><p>在本地系统中地址的分配取决于系统架构师，他们必须考虑总线上使用的设备以及与其他传统I2C总线的任何未来交互。
+举例来说，具有七个用户可分配地址引脚的设备允许将所有128个地址分配。
+如果已知保留地址将永远不会用于其预定目的，则可以将保留地址用于从机地址。</p><h5 id=a-id3113-通用广播地址3113-通用广播地址a><a id="3.1.13 通用广播地址">3.1.13 通用广播地址</a></h5><p>通用广播地址用于同时向连接到I2C总线的每个设备发送数据。
+然而，如果某个设备不需要通用广播中提供的任何数据，则可以通过不发出确认信号来忽略该地址。</p><p>如果设备需要来自通用广播地址的数据，它会确认该地址并表现为从机接收端。
+如果一个或多个设备响应，主机实际上并不知晓有多少设备已确认。
+第二个及后续字节由每个能够处理这些数据的从机接收端确认。
+无法处理这些字节之一的从机必须通过nack来忽略它。
+再次强调，如果一个或多个从机确认，则主机将看不到nack的信号。通用广播地址的含义总是在第二个字节中指定（见 <em><a href="#图 16">图 16</a></em> ）。</p><p><a id="图 16">图 16
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_16._General_call_address_format.png alt></a></p><p>有两种情况需要考虑：</p><ul><li>当最低有效位B为‘0’时，第二个字节的定义如下：<ul><li>0b0000_0110 (0h6)：<strong>硬件重置并写入从机地址的可编程部分</strong>。</br>接收到这个2字节序列后，所有设计为响应通用广播地址的设备将被重置并接受它们地址的可编程部分。
+必须采取预防措施以确保在施加供电电压后，设备不会拉低<strong>SDA</strong>或<strong>SCL</strong>线，因为这些低电平会阻塞总线。</li><li>0b0000_0100 (0h4)：<strong>通过硬件写入目标地址的可编程部分</strong>。</br>行为与上述相同，但设备不会重置。<br>编程过程的序列已在相应的设备数据表中发布。其余代码尚未固定，设备必须忽略它们。</li><li>0b0000_0000 (0h0)：<strong>此代码不允许作为第二个字节使用</strong>。</li></ul></li><li>当最低有效位 B 为‘1’时：</br><ul><li>2字节序列为‘硬件通用广播’。
+这意味着该序列是由硬件主机（例如键盘扫描仪）传输的，该设备可以被编程以传输所需的从机地址。
+由于主机事先不知道消息要传输到哪个从机，因此它只能生成这个硬件通用广播及其自身地址（向系统识别自身）（见 <em><a href="#图 17">图 17</a></em> ）。</li></ul></li></ul><p><a id="图 17">图 17
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_17._Data_transfer_from_a_hardware_controller-transmitter.png alt></a></p><p>第二个字节中剩下的七个位包含该主机的地址。
+这个地址被连接到总线的智能设备（例如微控制器）识别，智能设备随后接受来自该主机的信息。
+如果该主机也可以充当从机，则从机地址与主机地址相同。</p><p>在某些系统中，另一种选择是主机发送端在系统重置后设置为从机接收模式。
+通过这种方式，系统配置主机可以指示主机发射端（现在处于从机接收模式）将数据发送到哪个地址（见 <em><a href="#图 18">图 18</a></em> ）。
+在这个编程过程中，主机仍然保持在主机发送模式。</p><p><a id="图 18">图 18
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_18._Data_transfer_by_a_hardware-transmitter_capable_of_dumping_data_directly_to.png alt></a></p><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/multi-layer-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title=Multi-layer-AHB-协议翻译>Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
