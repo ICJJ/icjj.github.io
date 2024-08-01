@@ -1,0 +1,132 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="ICJJ Blog"><meta property="og:type" content="article"><meta property="og:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-06.png"><meta property="twitter:image" content="img/site/小米汽车/原型车壁纸/2880x1280/2880x1280-06.png"><meta name=title content="NXP I2C 知识提纲"><meta property="og:title" content="NXP I2C 知识提纲"><meta property="twitter:title" content="NXP I2C 知识提纲"><meta name=description content="NXP I2C的一些重要的点"><meta property="og:description" content="NXP I2C的一些重要的点"><meta property="twitter:description" content="NXP I2C的一些重要的点"><meta property="twitter:card" content="summary"><meta name=keyword content="程建军, chengjianjun, ChengJianjun, , 程建军的网络日志, 程建军的博客, ChengJianjun Blog, 博客, 个人网站, AMBA, FPGA, SPINALHDL, PCIE"><link rel="shortcut icon" href=/icer/img/site/favicon.ico><title>NXP I2C 知识提纲 | 程建军的博客 | ChengJianjun Blog</title>
+<link rel=canonical href=/icer/post/nxp-i2c-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/><link rel=stylesheet href=/icer/css/bootstrap.min.css><link rel=stylesheet href=/icer/css/hugo-theme-cleanwhite.min.css><link rel=stylesheet href=/icer/css/zanshang.css><link rel=stylesheet href=/icer/css/font-awesome.all.min.css><script src=/icer/js/jquery.min.js></script><script src=/icer/js/bootstrap.min.js></script><script src=/icer/js/hux-blog.min.js></script><script src=/icer/js/lazysizes.min.js></script></head><script async src="https://www.googletagmanager.com/gtag/js?id=G-FWR2FVFK68"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-FWR2FVFK68")}</script><nav class="navbar navbar-default navbar-custom navbar-fixed-top"><div class=container-fluid><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+</button>
+<a class=navbar-brand href=/icer>ICJJ Blog</a></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav navbar-right"><li><a href=/icer>Posts</a></li><li><a href=/icer/categories/bus/>bus</a></li><li><a href=/icer/categories/tech/>tech</a></li><li><a href=/icer/categories/tips/>tips</a></li><li><a href=/icer/archive/>ARCHIVE</a></li><li><a href=/icer/about/>ABOUT</a></li><li><a href=/icer/search><i class="fa fa-search"></i></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector(".navbar-toggle"),$navbar=document.querySelector("#huxblog_navbar"),$collapse=document.querySelector(".navbar-collapse");$toggle.addEventListener("click",handleMagic);function handleMagic(){$navbar.className.indexOf("in")>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf("in")<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><style type=text/css>header.intro-header{background-image:url(/icer/img/site/%e5%b0%8f%e7%b1%b3%e6%b1%bd%e8%bd%a6/%e5%8e%9f%e5%9e%8b%e8%bd%a6%e5%a3%81%e7%ba%b8/2880x1280/2880x1280-06.png)}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><div class=tags><a class=tag href=/tags/nxp title=NXP>NXP
+</a><a class=tag href=/tags/i2c title=I2C>I2C
+</a><a class=tag href=/tags/%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2 title=知识提纲>知识提纲</a></div><h1>NXP I2C 知识提纲</h1><h2 class=subheading></h2><span class=meta>Posted by
+程建军
+on
+Tuesday, April 23, 2024</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+post-container"><h1 id=nxp-i2c-知识提纲>NXP-I2C-知识提纲</h1><h2 id=nxp-i2c-知识提纲-1>NXP-I2C-知识提纲</h2><blockquote><p><a href=https://icjj.github.io/icer/post/nxp-i2c-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/>NXP I2C 协议翻译</a></p></blockquote><h3 id=a-id1-i2c基础知识1-i2c基础知识a><a id="1 i2c基础知识">1 i2c基础知识</a></h3><details><summary><strong>1.1 如何介绍i2c总线[点击展开]</strong></summary><pre><code>
+i2c总线是一种串行数据总线，使用有两个单bit的双向串行线进行通信。一条是sda，作为数据线；一条是scl；作为时钟线。
+连接到总线的每个设备都可以通过唯一地址进行软件寻址，且大多数模式下每个设备都可以作为主机从机，发送端接收端。
+因此，根据主从关系和收发关系，下每个设备都有四种身份。
+超高速模式下是个例外，由于使用了推挽的方式其只能以主机发送端和从机接收端进行发送数据，且只能有一个主机存在。
+大多数情况下总线上可以存在着多个主机和多个从机，使用线与的方式进行总线上的仲裁和同步。
+到目前为止有5个版本的速度模式。从100kbps到5Mbps。
+    </code></pre></details><details><summary><strong>1.2 i2c有5种速度模式[点击展开]</strong></summary><pre><code>
+1. 标准模式-Sm：100kbps；
+2. 快速模式-Fm：400kbps；
+3. 快速加模式-Fm+：1Mbps；
+4. 高速模式-HSm：3.4Mbps；
+5. 超高速模式-UFm：5Mbps；
+    </code></pre></details><details><summary><strong>1.3 两种传输模式[点击展开]</strong></summary><pre><code>
+<details>
+    <summary><strong>1.3.1 主机发送端向从机接收端写入数据[点击展开]</strong></summary>
+    <pre><code>
+1. 主机发送端向总线上所有从机发出START条件；
+2. 主机发送端向总线上所有从机发出7位地址+低电平的写；
+3. 对应从机接收端回应ack；
+4. 主机发送端次发送8bit的数据；
+5. 从机接收端多次回应ack或者nack；
+6. 主机发送STOP条件结束条件；
+    </code></pre></details><details><summary><strong>1.3.2 主机接收端从从机发送端读取数据[点击展开]</strong></summary><pre><code>
+1. 主机接收端向总线上所有从机发出START条件；
+2. 主机接收端向总线上所有从机发出7位地址+高电平的读；
+3. 对应从机回应ack；
+4. 从机发送端多次发送8bit的数据；
+5. 主机接收端多次回应ack或nack；
+6. 主机接收端发送STOP结束条件。
+    </code></pre></details><details><summary><strong>1.3.3 5种NACK产生的情况[点击展开]</strong></summary><pre><code>
+1. 寻址不到从机；
+2. 从机无法接受传输；
+3. 接收方无法接受传输；
+4. 接收方无法解析传输内容；
+5. 主机接收方想要结束传输；
+    </code></pre></details></code></pre></details><details><summary><strong>1.4 SCL的同步[点击展开]</strong></summary><pre><code>
+多个主机同时发起传输时，SCL线最先进入低电平的主机将总线的SCL保持；
+其他主机SCL线低到高的转变不会改变总线上SCL线的状态；
+最后一个结束SCL线低电平状态的主机将总线上SCL线的状态改变到高电平；
+第一个结束SCL线高电平状态的主机将总线上SCL线的状态改变到低电平；
+通过这种方式，生成一个同步SCL时钟。
+    </code></pre></details><details><summary><strong>1.5 SDA的仲裁[点击展开]</strong></summary><pre><code>
+多个主机同时发起传输时，在SCL的上升沿检查自身SDA的数据和总线上SDA的数据是否一致；
+如果一致，表示总线正在被其占有；
+如果不一致则退出仲裁；
+有从机功能的主机则进入从机状态。
+    </code></pre></details><details><summary><strong>1.6 数据和START/STOP条件重合将会产生未定义情况[点击展开]</strong></summary><pre><code>
+1. 两个主机各自的START和数据重合；
+2. 两个主机各自的STOP和数据重合；
+3. 两个主机各自的START和STOP重合；
+    </code></pre></details><details><summary><strong>1.7 START字节启动程序的内容[点击展开]</strong></summary><pre><code>
+1. START条件。
+2. START字节包（0b0000_0001）。
+3. ACK。
+4. START条件。
+    </code></pre></details><details><summary><strong>1.8 总线清除的几种方式[点击展开]</strong></summary><pre><code>
+1. 发送9个时钟脉冲。
+2. 使用复位信号重置总线。
+3. 使用POR复位电路。
+    </code></pre></details><details><summary><strong>1.9 设备ID包含哪些信息[点击展开]</strong></summary><pre><code>
+12bit的制造商信息+
+9bit的部件识别位+
+3bit的晶圆修订位
+    </code></pre></details><details><summary><strong>1.10 如何读取设备ID[点击展开]</strong></summary><pre><code>
+1. 主机发送START。
+2. 主机发送0b1111_1000。
+3. 主机发送从机地址+RW(这个可以随便)。
+4. 主机发送START。
+5. 主机发送0b1111_1001。
+6. 从机开始返回3个字节的设备ID。
+7. 主机发送NACK结束读取序列，如果主机ACK回应，则从机继续发送3个字节的设备ID。
+    </code></pre></details><details><summary><strong>1.11 如何开启高速模式[点击展开]</strong></summary><pre><code>
+1. START。
+2. 8位主机代码（0b0000_1xxx）。
+3. 不确认位（NACK）。
+    </code></pre></details><h3 id=a-id2-i2c时序框图2-i2c时序框图a><a id="2 i2c时序框图">2 i2c时序框图</a></h3><details><summary><strong>2.1 i2c的SDA保持有效和改变有效的时序图[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_4._Bit_transfer_on_the_I2C-bus.png alt>
+    </code></pre></details><details><summary><strong>2.2 i2c的start条件和STOP条件时序图[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_5._START_and_STOP_conditions.png alt>
+    </code></pre></details><details><summary><strong>2.3 7bit地址完整的传输过程[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_9._A_complete_data_transfer.png alt>
+    </code></pre></details><details><summary><strong>2.3 完整的写传输数据格式[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_11._A_controller-transmitter_addressing_a_target_receiver_with_a_7-bit_address_%28the_transfer_direction_is_not_changed%29.png alt>
+    </code></pre></details><details><summary><strong>2.4 完整的读传输数据格式[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_12._A_controller_reads_a_target_immediately_after_the_first_byte.png alt>
+    </code></pre></details><details><summary><strong>2.5 传输过程中不发送STOP，改变从机地址的数据格式[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_13._Combined_format.png alt>
+    </code></pre></details><details><summary><strong>2.6 START字节程序[点击展开]</strong></summary><pre><code>
+<img src=https://icjj.github.io/icer/img/post/i2c/Figure_19._START_byte_procedure.png alt>
+    </code></pre></details><h3 id=a-id3-i2c零碎知识点3-i2c零碎知识点a><a id="3 i2c零碎知识点">3 i2c零碎知识点</a></h3><ol><li>仲裁和同步都是通过线与的放肆实现的，低电平信号优先级最高。</li><li>最长周期低电平设备的scl信号决定了总线上scl信号的低电平周期长度。</li><li>最短周期高电平设备的scl信号决定了总线上scl信号的高电平周期长度。</li><li>包含从机功能的主机在失去总线控制权时，必须立即切换到从机模式。</li><li>START之后紧跟一个STOP是非法格式。</li><li>10位地址的格式（7b1111_1xx+(RW)+8bxxxx_xxxx），
+从机地址第一部分可能有多个从机应答，但从机地址第二部分只有一个从机能够应答。</li><li>所有从机对上一次寻址的结果是有记忆的。</li><li>只有START条件和STOP条件能够重置设备状态机。</li><li>SDA和SCL的空闲电平为高。</li><li>START字节和START条件都是用来启动传输的，差别只在启动过程的长短。</li><li>由于UFm是单向的，所以忽略确认位，且始终为1。</li><li>UFm从机的响应是通过其他信号反馈的，</li><li>标准模式、快速模式、快速加模式保持相同的总线协议和数据格式。</li><li>由于主机代码格式为0b0000_1xxx，所以一个i2c总线上只会存在8个高速主机。</li><li>高速模式不进行仲裁和时钟同步。</li></ol><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 APB 协议翻译">&larr;
+Previous Post</a></li><li class=next><a href=/icer/post/nxp-i2c-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="NXP I2C 协议翻译">Next
+Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
+visible-lg-block
+sidebar-container
+catalog-container"><div class=side-catalog><hr class="hidden-sm hidden-xs"><h5><a class=catalog-toggle href=#>CATALOG</a></h5><ul class=catalog-body></ul></div></div><div class="col-lg-8 col-lg-offset-2
+col-md-10 col-md-offset-1
+sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/icer/tags/ahb title=ahb>ahb
+</a><a href=/icer/tags/amba title=amba>amba
+</a><a href=/icer/tags/amba5 title=amba5>amba5
+</a><a href=/icer/tags/apb title=apb>apb
+</a><a href=/icer/tags/bus title=bus>bus
+</a><a href=/icer/tags/git title=git>git
+</a><a href=/icer/tags/html title=html>html
+</a><a href=/icer/tags/i2c title=i2c>i2c
+</a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
+</a><a href=/icer/tags/nxp title=nxp>nxp
+</a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译
+</a><a href=/icer/tags/%E5%A4%A7%E5%B0%8F%E7%AB%AF title=大小端>大小端
+</a><a href=/icer/tags/%E5%AD%97%E8%8A%82%E5%BA%8F title=字节序>字节序
+</a><a href=/icer/tags/%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2 title=知识提纲>知识提纲</a></div></section><section><hr><h5>FRIENDS</h5><ul class=list-inline><li><a target=_blank href=https://zhaozhihan.com>Linda的博客</a></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href=mailto:chengjj9527@gmail.com><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-envelope fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/icjj><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://github.com/ICJJ><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-gitlab fa-stack-1x fa-inverse"></i></span></a></li><li><a target=_blank href=https://stackoverflow.com/users/26381389><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i></span></a></li><li><a href rel=alternate type=application/rss+xml title="ICJJ Blog"><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-rss fa-stack-1x fa-inverse"></i></span></a></li></ul><p class="copyright text-muted">Copyright &copy; ICJJ Blog 2024<br><a href=https://themes.gohugo.io/hugo-theme-cleanwhite>CleanWhite Hugo Theme</a> by <a href=https://zhaohuabing.com>Huabing</a> |
+<iframe style=margin-left:2px;margin-bottom:-5px frameborder=0 scrolling=0 width=100px height=20px src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true"></iframe></p></div></div></div></footer><script>function loadAsync(e,t){var s=document,o="script",n=s.createElement(o),i=s.getElementsByTagName(o)[0];n.src=e,t&&n.addEventListener("load",function(e){t(null,e)},!1),i.parentNode.insertBefore(n,i)}</script><script>$("#tag_cloud").length!==0&&loadAsync("/js/jquery.tagcloud.js",function(){$.fn.tagcloud.defaults={color:{start:"#bbbbee",end:"#0085a1"}},$("#tag_cloud a").tagcloud()})</script><script>loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js",function(){var e=document.querySelector("nav");e&&FastClick.attach(e)})</script><script type=text/javascript>function generateCatalog(e){_containerSelector="div.post-container";var t,n,s,o,i,a=$(_containerSelector),r=a.find("h1,h2,h3,h4,h5,h6");return $(e).html(""),r.each(function(){t=$(this).prop("tagName").toLowerCase(),o="#"+$(this).prop("id"),n=$(this).text(),i=$('<a href="'+o+'" rel="nofollow">'+n+"</a>"),s=$('<li class="'+t+'_nav"></li>').append(i),$(e).append(s)}),!0}generateCatalog(".catalog-body"),$(".catalog-toggle").click(function(e){e.preventDefault(),$(".side-catalog").toggleClass("fold")}),loadAsync("/icer/js/jquery.nav.js",function(){$(".catalog-body").onePageNav({currentClass:"active",changeHash:!1,easing:"swing",filter:"",scrollSpeed:700,scrollOffset:0,scrollThreshold:.2,begin:null,end:null,scrollChange:null,padding:80})})</script><script src=https://cdn.jsdelivr.net/gh/jmnote/plantuml-encoder@1.2.4/dist/plantuml-encoder.min.js integrity="sha256-Qsk2KRBCN5qVZX7B+8+2IvQl1Aqc723qV1tBCQaVoqo=" crossorigin=anonymous></script><script>(function(){let e="language-plantuml";Array.prototype.forEach.call(document.querySelectorAll("[class^="+e+"]"),function(e){let t=document.createElement("IMG");t.loading="lazy",t.src="http://www.plantuml.com/plantuml/svg/~1"+plantumlEncoder.encode(e.innerText),e.parentNode.parentNode.insertBefore(t,e.parentNode),e.parentNode.style.display="none"})})()</script></body></html>
