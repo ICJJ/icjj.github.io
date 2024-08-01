@@ -40,6 +40,43 @@ post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=
 突发传输：
   地址边界不回环的增量突发传输，incr4，incr8，incr16；
   地址边界回环的回环突发传输，wrap4，wrap8，wrap16；
+    </code></pre></details><details><summary><strong>1.7 突发传输终止的条件[点击展开]</strong></summary><pre><code>
+1. 从机发出拉低<strong>HRESP</strong>信号发出ERROR响应；
+2. 多主机系统中互联组件终止当前传输，将传输权限转交给其他主机。
+	</code></pre></details><details><summary><strong>1.8 等待状态中改变传输类型的情况[点击展开]</strong></summary><pre><code>
+只能更改一次
+1. <strong>HTRANS</strong>为IDLE的传输；
+2. <strong>HTRANS</strong>为BUSY的传输；
+    </code></pre></details><details><summary><strong>1.9 等待状态中改变地址的情况[点击展开]</strong></summary><pre><code>
+只能更改一次
+1. <strong>HTRANS</strong>为IDLE的传输；
+2. <strong>HRESP</strong>为ERROR之后；
+    </code></pre></details><details><summary><strong>2.0 HPROT的功能[点击展开]</strong></summary><pre><code>
+<strong>HPROT[0]</strong>：指令还是数据访问；
+<strong>HPROT[1]</strong>：用户还是特权访问；
+<strong>HPROT[2]</strong>：不可缓冲还是可以；
+<strong>HPROT[3]</strong>：不可改变还是可以；
+<strong>HPROT[4]</strong>：不可查找还是可以；
+<strong>HPROT[5]</strong>：不可分配还是可以；
+<strong>HPROT[6]</strong>：不可共享还是可以；
+    </code></pre></details><details><summary><strong>2.1 三种传输响应[点击展开]</strong></summary><pre><code>
+1. 成功完成：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为LOW。
+2. 失败完成
+   第一拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为LOW。
+   第二拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为HIGH。
+3. 延迟传输：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为HIGH。
+    </code></pre></details><details><summary><strong>2.2 独占传输的步骤[点击展开]</strong></summary><pre><code>
+1. 对地址A执行独占读取；
+2. 根据独占读取的值计算一个新的值，作为独占写入的值；
+3. 对地址A执行独占写入；
+4. 对同一地址两次独占操作之间不允许插入其他主机的独占写入，否则失败；
+    </code></pre></details><details><summary><strong>2.3 独占传输<strong>HEXOKAY</strong>失败的可能[点击展开]</strong></summary><pre><code>
+1. 传输位置不支持独占传输；
+2. 独占传输期间有其他独占传输写入成功；
+    </code></pre></details><details><summary><strong>2.4 独占传输限制[点击展开]</strong></summary><pre><code>
+1. 必须是单一的传输<strong>HBURST</strong>为[SINGLE、INCR]；
+2. 不得包含busy传输；
+3. 地址必须与HSIZE指示的数据大小对齐；
     </code></pre></details><h3 id=a-id2-ahb-基本时序图2-ahb-基本时序图a><a id="2 ahb 基本时序图">2 AHB 基本时序图</a></h3><details><summary><strong>2.1 没有等待的读传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-1_Read_transfer.png alt>
     </code></pre></details><details><summary><strong>2.2 没有等待的写传输[点击展开]</strong></summary><pre><code>
@@ -62,44 +99,7 @@ post-container"><h1 id=amba5-ahb-知识提纲>AMBA5-AHB-知识提纲</h1><h2 id=
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-11_Eight-beat_incrementing_burst.png alt>
     </code></pre></details><details><summary><strong>2.11 INCR 半字写和字读传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/ahb/Figure_3-12_Undefined_length_bursts.png alt>
-    </code></pre></details><h3 id=a-id3-ahb零碎知识点3-ahb零碎知识点a><a id="3 ahb零碎知识点">3 AHB零碎知识点</a></h3><ol><li>只有连续传输<strong>HBURST</strong>为[INCR、WRAP4-16、INCR4-16]的最后一个周期可以将<strong>HTRANS</strong>设为BUSY；</li><li>所有传输的第一个周期<strong>HTRANS</strong>只能是NONSEQ、IDLE。</li><li><strong>HBURST</strong>为SINGLE的传输之后，只能跟随<strong>HTRANS</strong>为[IDLE、NONSEQ]的传输；</li><li>只有<strong>HTRANS</strong>为 NONSEQ和SEQ才能读写数据；</li><li><strong>HRESP</strong>为ERROR只会在传输的最后两个周期；</li></ol><details><summary><strong>3.1 突发传输终止的条件[点击展开]</strong></summary><pre><code>
-1. 从机发出拉低<strong>HRESP</strong>信号发出ERROR响应；
-2. 多主机系统中互联组件终止当前传输，将传输权限转交给其他主机。
-	</code></pre></details><details><summary><strong>3.2 等待状态中改变传输类型的情况[点击展开]</strong></summary><pre><code>
-只能更改一次
-1. <strong>HTRANS</strong>为IDLE的传输；
-2. <strong>HTRANS</strong>为BUSY的传输；
-    </code></pre></details><details><summary><strong>3.3 等待状态中改变地址的情况[点击展开]</strong></summary><pre><code>
-只能更改一次
-1. <strong>HTRANS</strong>为IDLE的传输；
-2. <strong>HRESP</strong>为ERROR之后；
-    </code></pre></details><details><summary><strong>3.4 HPROT的功能[点击展开]</strong></summary><pre><code>
-<strong>HPROT[0]</strong>：指令还是数据访问；
-<strong>HPROT[1]</strong>：用户还是特权访问；
-<strong>HPROT[2]</strong>：不可缓冲还是可以；
-<strong>HPROT[3]</strong>：不可改变还是可以；
-<strong>HPROT[4]</strong>：不可查找还是可以；
-<strong>HPROT[5]</strong>：不可分配还是可以；
-<strong>HPROT[6]</strong>：不可共享还是可以；
-    </code></pre></details><details><summary><strong>3.5 三种传输响应[点击展开]</strong></summary><pre><code>
-1. 成功完成：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为LOW。
-2. 失败完成
-   第一拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为LOW。
-   第二拍：<strong>HRESP</strong>为ERROR，<strong>HREADY</strong>为HIGH。
-3. 延迟传输：<strong>HRESP</strong>为OKAY，<strong>HREADY</strong>为HIGH。
-    </code></pre></details><details><summary><strong>3.6 独占传输的步骤[点击展开]</strong></summary><pre><code>
-1. 对地址A执行独占读取；
-2. 根据独占读取的值计算一个新的值，作为独占写入的值；
-3. 对地址A执行独占写入；
-4. 对同一地址两次独占操作之间不允许插入其他主机的独占写入，否则失败；
-    </code></pre></details><details><summary><strong>3.7 独占传输<strong>HEXOKAY</strong>失败的可能[点击展开]</strong></summary><pre><code>
-1. 传输位置不支持独占传输；
-2. 独占传输期间有其他独占传输写入成功；
-    </code></pre></details><details><summary><strong>3.8 独占传输限制[点击展开]</strong></summary><pre><code>
-1. 必须是单一的传输<strong>HBURST</strong>为[SINGLE、INCR]；
-2. 不得包含busy传输；
-3. 地址必须与HSIZE指示的数据大小对齐；
-    </code></pre></details><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/ data-toggle=tooltip data-placement=top title="AMBA5 APB 知识提纲">&larr;
+    </code></pre></details><h3 id=a-id3-ahb零碎知识点3-ahb零碎知识点a><a id="3 ahb零碎知识点">3 AHB零碎知识点</a></h3><ol><li>只有连续传输<strong>HBURST</strong>为[INCR、WRAP4-16、INCR4-16]的最后一个周期可以将<strong>HTRANS</strong>设为BUSY；</li><li>所有传输的第一个周期<strong>HTRANS</strong>只能是NONSEQ、IDLE。</li><li><strong>HBURST</strong>为SINGLE的传输之后，只能跟随<strong>HTRANS</strong>为[IDLE、NONSEQ]的传输；</li><li>只有<strong>HTRANS</strong>为 NONSEQ和SEQ才能读写数据；</li><li><strong>HRESP</strong>为ERROR只会在传输的最后两个周期；</li></ol><hr><ul class=pager><li class=previous><a href=/icer/post/amba5-apb-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/ data-toggle=tooltip data-placement=top title="AMBA5 APB 知识提纲">&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/amba5-ahb-%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91/ data-toggle=tooltip data-placement=top title="AMBA5 AHB 协议翻译">Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
