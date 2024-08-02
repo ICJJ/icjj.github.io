@@ -13,7 +13,7 @@ Tuesday, April 23, 2024</span></div></div></div></div></header><article><div cla
 col-md-10 col-md-offset-1
 post-container"><h1 id=a-idspi-介绍spi-介绍a><a id="spi 介绍">SPI 介绍</a></h1><h2 id=a-id串行接口-spi介绍v20-的ahb多层互联a><a id="串行接口 spi介绍">v2.0 的AHB多层互联</a></h2><p>SPI是一种事实标准，没有专门规范文件，因此各个厂商的SPI期间配置可能不一样，不一定可以互相操作。</p><p>SPI是微控制器MCU和外围IC（如传感器、ADC、DAC、移位寄存器、SRAM等）之间使用最广泛的接口之一。
 本文简要说明SPI接口信息和工作模式，</p><p>手册内容：</p><ul><li><em><a href="#第1章 介绍">第1章 介绍</a></em></li><li><em><a href="#第2章 外部信号描述">第2章 外部信号描述</a></em></li><li><em><a href="#第3章 数据传输">第3章 数据传输</a></em></li><li><em><a href="#第4章 时钟极性和相位">第4章 时钟极性和相位</a></em></li><li><em><a href="#第5章 多从机spi">第5章 多从机SPI</a></em></li></ul><h3 id=a-id引言引言a><a id=引言>引言</a></h3><p>术语：</p><table><thead><tr><th>缩略语</th><th>描述</th></tr></thead><tbody><tr><td>SPI</td><td>Serial Parallel Interface</td></tr><tr><td>SS</td><td>Slave Select</td></tr><tr><td>SCK</td><td>Serial Clock</td></tr><tr><td>MOSI</td><td>Master Output, Slave Input</td></tr><tr><td>MISO</td><td>Master Input, Slave Output</td></tr></tbody></table><h3 id=a-id第1章-介绍第1章-介绍a><a id="第1章 介绍">第1章 介绍</a></h3><p><em><a href="#图 1-1">图 1-1</a></em> 提供了SPI接口框图。</p><p><a id="图 1-1">图 1-1
-<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_1-1_%e4%b8%80%e4%b8%aa%e4%b8%bb%e6%9c%ba%e5%92%8c%e4%b8%80%e4%b8%aa%e4%bb%8e%e6%9c%ba%e7%9a%84SPI%e6%8e%a5%e5%8f%a3%e6%a1%86%e5%9b%be.png alt></a></p><p>SPI是一种同步、全双工、主从式接口。来自主机或从机的数据在时钟上升沿或下降沿同步。
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_1-1_%e4%b8%80%e4%b8%aa%e4%b8%bb%e6%9c%ba%e4%b8%80%e4%b8%aa%e4%bb%8e%e6%9c%ba%e7%9a%84SPI%e6%8e%a5%e5%8f%a3%e6%a1%86%e5%9b%be.png alt></a></p><p>SPI是一种同步、全双工、主从式接口。来自主机或从机的数据在时钟上升沿或下降沿同步。
 主机和从机可以同时传输数据。SPI接口可以是3线式或4线式。本文重点介绍常用的4线SPI接口</p><h3 id=a-id第2章-外部信号描述第2章-外部信号描述a><a id="第2章 外部信号描述">第2章 外部信号描述</a></h3><h4 id=a-id21-信号详细描述21-信号详细描述a><a id="2.1 信号详细描述">2.1 信号详细描述</a></h4><p>此部分列出了所有端口的名称和描述，包括连接或可能连接到离芯片的输入和输出。</p><p>SPI接口只允许有一个主机存在，但可以有多个从机存在。这种情况的详细介绍见 <em><a href=#未定>未定</a></em> 。</p><p>SPI模块共有4个外部引脚：</p><ul><li><em><a href="#2.1.1 mosi">2.1.1 MOSI</a></em></li><li><em><a href="#2.1.2 miso">2.1.2 MISO</a></em></li><li><em><a href="#2.1.3 cs">2.1.3 CS</a></em></li><li><em><a href="#2.1.4 sclk">2.1.4 SCLK</a></em></li></ul><h5 id=a-id211-mosi211-mosia><a id="2.1.1 mosi">2.1.1 MOSI</a></h5><p>该引脚用于在SPI模块配置为主机时发送数据，并在配置为从机时接收数据。</p><h5 id=a-id212-miso212-misoa><a id="2.1.2 miso">2.1.2 MISO</a></h5><p>该引脚用于在SPI模块配置为主机时接收数据，并在配置为从机时发送数据。</p><h5 id=a-id213-cs213-csa><a id="2.1.3 cs">2.1.3 CS</a></h5><p>这个引脚用于将选择信号从SPI主机输出到另一个需要进行数据传输的从机。</p><p>数据传输只在发出cs信号的主机和接收cs信号的从机之间进行。</p><h5 id=a-id214-sclk214-sclka><a id="2.1.4 sclk">2.1.4 SCLK</a></h5><p>这个引脚用于输出时钟。</p><p>SPI传输数据在此信号的同步下进行。可能在上升沿同步，也可能在下降沿同步。</p><h4 id=a-id第3章-数据传输第3章-数据传输a><a id="第3章 数据传输">第3章 数据传输</a></h4><p>要开始SPI通信，主机必须发送时钟信号，并通过使能CS信号选择从机。
 片选通常是低电平有效信号。
 因此，主机必须在该信号上发送逻辑0以选择从机。</p><p>SPI是全双工接口，主机和从机可以分别通过MOSI和MISO线路同时发送数据。</p><p>在SPI通信期间，数据的发送（串行移出到MOSI/SDO总线上）和接收（采样或读入总线(MISO/SDI)上的数据）同时进行。
@@ -21,11 +21,86 @@ post-container"><h1 id=a-idspi-介绍spi-介绍a><a id="spi 介绍">SPI 介绍</
 时钟相位CPHA指定了采样MOSI和MISO的的边沿，有奇数边沿还是偶数边沿两种。
 <em><a href="#表 3-1">表 3-1</a></em> 列出了存在的四种时钟模式，根据相关寄存器的配置可选择其一。</p><p><a id="表 3-1">表 3-1</a> 通过CPOL和CPHA选择SPI的时钟模式</p><table><thead><tr><th>SPI时钟模式</th><th>SPOL</th><th>SPHA</th><th>空闲状态下的时钟极性</th><th>用于采样MOSI和MISO的时钟边沿</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td><td>逻辑低电平</td><td>数据在奇数时钟边沿采样。</td></tr><tr><td>1</td><td>0</td><td>1</td><td>逻辑低电平</td><td>数据在偶数时钟边沿采样。</td></tr><tr><td>2</td><td>1</td><td>0</td><td>逻辑高电平</td><td>数据在奇数时钟边沿采样。</td></tr><tr><td>3</td><td>1</td><td>1</td><td>逻辑高电平</td><td>数据在偶数时钟边沿采样。</td></tr></tbody></table><p><em><a href="#图 3-1">图 3-1</a></em> 列出了SPI时钟模式0，在这种模式下，CPOL为0，CPHA为0。
 表明SCLK时钟信号的空闲电平为低电平，存在于MOSI和MISO总线上的数据在时钟奇数边沿被采样。</p><p><a id="图 3-1">图 3-1
-<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-1_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f0_CPOL0_CPHA0.png alt></a></p><p><em><a href="#图 3-2">图 3-2</a></em> 列出了SPI时钟模式1，在这种模式下，CPOL为0，CPHA为1。</p><p>表明SCLK时钟信号的空闲电平为低电平，存在于MOSI和MISO总线上的数据在时钟偶数边沿被采样。
-<a id="图 3-2">图 3-2
-<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-2_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f0_CPOL0_CPHA1.png alt></a></p><p><em><a href="#图 3-3">图 3-3</a></em> 列出了SPI时钟模式2，在这种模式下，CPOL为1，CPHA为0。</p><p>表明SCLK时钟信号的空闲电平为高电平，存在于MOSI和MISO总线上的数据在时钟奇数边沿被采样。</p><p><a id="图 3-3">图 3-3
-<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-3_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f0_CPOL1_CPHA0.png alt></a></p><p><em><a href="#图 3-4">图 3-4</a></em> 列出了SPI时钟模式3，在这种模式下，CPOL为1，CPHA为1。</p><p>表明SCLK时钟信号的空闲电平为高电平，存在于MOSI和MISO总线上的数据在时钟偶数边沿被采样。</p><p><a id="图 3-4">图 3-4
-<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-4_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f0_CPOL1_CPHA1.png alt></a></p><h3 id=a-id第5章-多从机spi第5章-多从机spia><a id="第5章 多从机spi">第5章 多从机SPI</a></h3><hr><ul class=pager><li class=previous><a href=/icer/post/%E5%AD%97%E8%8A%82%E5%BA%8F%E6%B5%85%E8%B0%88/ data-toggle=tooltip data-placement=top title=字节序浅谈>&larr;
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-1_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f0_CPOL0_CPHA0.png alt></a></p><details><summary><strong>图 3-1 波形代码[点击展开]</strong></summary><pre><code>
+{signal: 
+[
+   {name:'CS', wave: '10.......1'},
+   {name:'SCLK', wave: '0.10101010'},
+   {name:'MISO', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+   {name:'MOSI', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+ ],
+   head:
+   {
+   tick:0,
+   every:1
+ },
+   foot:
+   {
+   text:"图 3-1 SPI时钟模式0，CPOL=0，CPHA=0"
+   } 
+}
+    </code></pre></details><p><em><a href="#图 3-2">图 3-2</a></em> 列出了SPI时钟模式1，在这种模式下，CPOL为0，CPHA为1。
+表明SCLK时钟信号的空闲电平为低电平，存在于MOSI和MISO总线上的数据在时钟偶数边沿被采样。</p><p><a id="图 3-2">图 3-2
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-2_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f1_CPOL0_CPHA1.png alt></a></p><details><summary><strong>图 3-2 波形代码[点击展开]</strong></summary><pre><code>
+{signal: 
+[
+   {name:'CS', wave: '10.......1'},
+   {name:'SCLK', wave: '010101010.'},
+   {name:'MISO', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+   {name:'MOSI', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+ ],
+   head:
+   {
+   tick:0,
+   every:1
+ },
+   foot:
+   {
+   text:"图 3-2 SPI时钟模式2，CPOL=0，CPHA=1"
+   } 
+}
+    </code></pre></details><p><em><a href="#图 3-3">图 3-3</a></em> 列出了SPI时钟模式2，在这种模式下，CPOL为1，CPHA为0。
+表明SCLK时钟信号的空闲电平为高电平，存在于MOSI和MISO总线上的数据在时钟奇数边沿被采样。</p><p><a id="图 3-3">图 3-3
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-3_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f2_CPOL1_CPHA0.png alt></a></p><details><summary><strong>图 3-3 波形代码[点击展开]</strong></summary><pre><code>
+{signal: 
+[
+   {name:'CS', wave: '10.......1'},
+   {name:'SCLK', wave: '1101010101'},
+   {name:'MISO', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+   {name:'MOSI', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+ ],
+   head:
+   {
+   tick:0,
+   every:1
+ },
+   foot:
+   {
+   text:"图 3-3 SPI时钟模式3，CPOL=1，CPHA=0"
+   } 
+}
+    </code></pre></details><p><em><a href="#图 3-4">图 3-4</a></em> 列出了SPI时钟模式3，在这种模式下，CPOL为1，CPHA为1。
+表明SCLK时钟信号的空闲电平为高电平，存在于MOSI和MISO总线上的数据在时钟偶数边沿被采样。</p><p><a id="图 3-4">图 3-4
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_3-4_SPI%e6%97%b6%e9%92%9f%e6%a8%a1%e5%bc%8f3_CPOL1_CPHA1.png alt></a></p><details><summary><strong>图 3-4 波形代码[点击展开]</strong></summary><pre><code>
+{signal: 
+[
+   {name:'CS', wave: '10.......1'},
+   {name:'SCLK', wave: '1010101011'},
+   {name:'MISO', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+   {name:'MOSI', wave: 'x=.=.=.=.x',data:["bit0","bit1","bit2","bit3"]},
+ ],
+   head:
+   {
+   tick:0,
+   every:1
+ },
+   foot:
+   {
+   text:"图 3-4 SPI时钟模式3，CPOL=1，CPHA=1"
+   } 
+}
+    </code></pre></details><h3 id=a-id第5章-多从机spi第5章-多从机spia><a id="第5章 多从机spi">第5章 多从机SPI</a></h3><p><a id="图 5-1">图 5-1
+<img src=https://icjj.github.io/icer/img/post/spi/%e5%9b%be_5-1_%e4%b8%80%e4%b8%aa%e4%b8%bb%e6%9c%ba%e5%a4%9a%e4%b8%aa%e4%bb%8e%e6%9c%ba%e7%9a%84%e4%b8%80%e8%88%ac%e6%8e%a5%e5%8f%a3%e6%a1%86%e5%9b%be.png alt></a></p><hr><ul class=pager><li class=previous><a href=/icer/post/%E5%AD%97%E8%8A%82%E5%BA%8F%E6%B5%85%E8%B0%88/ data-toggle=tooltip data-placement=top title=字节序浅谈>&larr;
 Previous Post</a></li><li class=next><a href=/icer/post/nxp-i2c-%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2/ data-toggle=tooltip data-placement=top title="NXP I2C 知识提纲">Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
