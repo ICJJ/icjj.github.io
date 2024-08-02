@@ -12,7 +12,7 @@ on
 Tuesday, April 23, 2024</span></div></div></div></div></header><article><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2
 col-md-10 col-md-offset-1
 post-container"><h1 id=字节序>字节序</h1><h2 id=字节序大小端等>字节序大小端等</h2><p>高字节：最右边的字节。</p><h3 id=a-id1-位序和字节序1-位序和字节序a><a id="1 位序和字节序">1 位序和字节序</a></h3><p>无论大端CPU还是小端CPU，一定是先收发MSB，再收发LSB。</p><h4 id=a-id11-msb11-msba><a id="1.1 MSB">1.1 MSB</a></h4><p>MSB：Most Significant Bit/Byte，最高有效位/字节</p><p>对于数据 0b1001_0100_1011_0100</p><p>不管是大端还是小端，MSB都为0b1/0b1001_0100。</p><h4 id=a-id12-lsm12-lsma><a id="1.2 LSM">1.2 LSM</a></h4><p>LSM：Last Significant Bit/Byte，最低有效位/字节</p><p>对于数据 0b1001_0100_1011_0100</p><p>无论是大端还是小端，LSM都为0b0/0b1011_0100。</p><h3 id=a-id2-大小端2-大小端a><a id="2 大小端">2 大小端</a></h3><h4 id=a-id21-大端21-大端a><a id="2.1 大端">2.1 大端</a></h4><p>大端中，数据的低位（最左边）存放在低地址（最左边）中。MSB是低地址。计算机从低地址开始读取。</p><p>对于数据 0x01234567来说：</p><table><thead><tr><th>Byte0[0:7]</th><th>Byte1[8:15]</th><th>Byte2[16:23]</th><th>Byte3[24:31]</th></tr></thead><tbody><tr><td>0x01</td><td>0x23</td><td>0x45</td><td>0x67</td></tr></tbody></table><h4 id=a-id22-小端22-小端a><a id="2.2 小端">2.2 小端</a></h4><p>小端中，数据的低位（最左边）存放在高地址（最右边）中。MSB是高地址。计算机从高地址开始读取。</p><p>对于数据 0x01234567来说：</p><table><thead><tr><th>Byte0[31:24]</th><th>Byte1[23:16]</th><th>Byte2[15:8]</th><th>Byte3[7:0]</th></tr></thead><tbody><tr><td>0x67</td><td>0x45</td><td>0x23</td><td>0x01</td></tr></tbody></table><hr><ul class=pager><li class=previous><a href=/icer/post/%E6%80%BB%E7%BA%BF%E9%80%9A%E8%AF%86/ data-toggle=tooltip data-placement=top title=总线通识>&larr;
-Previous Post</a></li><li class=next><a href=/icer/post/spi-%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/ data-toggle=tooltip data-placement=top title="SPI 介绍">Next
+Previous Post</a></li><li class=next><a href=/icer/post/uart-%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/ data-toggle=tooltip data-placement=top title="UART 介绍">Next
 Post &rarr;</a></li></ul><script src=https://giscus.app/client.js data-repo=ICJJ/icer data-repo-id=R_kgDOMWEQRg data-category=General data-category-id=DIC_kwDOMWEQRs4CgyrH data-mapping=pathname data-reactions-enabled=1 data-emit-metadata=0 data-theme=light data-lang=en crossorigin=anonymous async></script></div><div class="col-lg-2 col-lg-offset-0
 visible-lg-block
 sidebar-container
@@ -29,6 +29,7 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
 </a><a href=/icer/tags/nxp title=nxp>nxp
 </a><a href=/icer/tags/spi title=spi>spi
+</a><a href=/icer/tags/uart title=uart>uart
 </a><a href=/icer/tags/%E4%B8%B2%E5%8F%A3 title=串口>串口
 </a><a href=/icer/tags/%E5%8D%8F%E8%AE%AE%E7%BF%BB%E8%AF%91 title=协议翻译>协议翻译
 </a><a href=/icer/tags/%E5%A4%A7%E5%B0%8F%E7%AB%AF title=大小端>大小端
