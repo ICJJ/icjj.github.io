@@ -15,7 +15,7 @@ post-container"><h1 id=a-iduart-介绍uart-介绍a><a id="uart 介绍">UART 介�
 本文将UART用作硬件通信协议应遵循的标准步骤进行说明。</p><p>正确配置后，UART可以配合许多不同类型的涉及发送和接收串行数据的串行协议工作。
 在串行通信中，数据通过单条线路或导线逐位传输。在双向通信中，我们使用两根导线来进行连续的串行数据传输。
 根据应用和系统要求，串行通信需要的电路和导线较少，可降低实现成本。</p><p>本文将讨论使用UART的基本原则，重点是数据包传输、标准帧协议和定制帧协议；
-定制帧协议将是安全合规性方面的增值特性，尤其是在代码开发期间。在产品开发过程中，本文档还旨在分享一些基本步骤，以检查数据表的实际使用。</p><p>内容：</p><ul><li><em><a href="#第1章 介绍">第1章 介绍</a></em></li><li><em><a href="#第2章 信号描述">第2章 信号描述</a></em></li><li><em><a href="#第3章 数据传输">第3章 数据传输</a></em></li><li><em><a href="#第4章 时钟极性和相位">第4章 时钟极性和相位</a></em></li><li><em><a href="#第5章 多从机spi">第5章 多从机SPI</a></em></li></ul><h3 id=a-id引言引言a><a id=引言>引言</a></h3><p>术语：</p><table><thead><tr><th>缩略语</th><th>描述</th></tr></thead><tbody><tr><td>UART</td><td>Universal Asynchronous Receiver/Transmitter</td></tr><tr><td>RX</td><td>Receiver PORT</td></tr><tr><td>TX</td><td>Transmitter PORT</td></tr></tbody></table><h3 id=a-id第1章介绍第1章介绍a><a id=第1章介绍>第1章介绍</a></h3><p>UART是一种异步通信协议，没有时钟信号来进行数据的同步。因此只能以约定的速率进行数据传输。
+定制帧协议将是安全合规性方面的增值特性，尤其是在代码开发期间。在产品开发过程中，本文档还旨在分享一些基本步骤，以检查数据表的实际使用。</p><p>内容：</p><ul><li><em><a href="#第1章 介绍">第1章 介绍</a></em></li><li><em><a href="#第2章 信号描述">第2章 信号描述</a></em></li><li><em><a href="#第3章 数据传输">第3章 数据传输</a></em></li></ul><h3 id=a-id引言引言a><a id=引言>引言</a></h3><p>术语：</p><table><thead><tr><th>缩略语</th><th>描述</th></tr></thead><tbody><tr><td>UART</td><td>Universal Asynchronous Receiver/Transmitter</td></tr><tr><td>RX</td><td>Receiver 端口</td></tr><tr><td>TX</td><td>Transmitter 端口</td></tr></tbody></table><h3 id=a-id第1章介绍第1章介绍a><a id=第1章介绍>第1章介绍</a></h3><p>UART是一种异步通信协议，没有时钟信号来进行数据的同步。因此只能以约定的速率进行数据传输。
 UART也是一种单主机单从机的串口协议，如 <em><a href="#图 1-1">图 1-1</a></em> 所示，RX和TX直接连接。</p><p><a id="图 1-1">图 1-1
 <img src=https://icjj.github.io/icer/img/post/uart/%e5%9b%be_1-1_uart%e4%b8%bb%e6%9c%ba%e5%92%8c%e4%bb%8e%e6%9c%ba%e7%bb%93%e6%9e%84%e6%a1%86%e5%9b%be.png alt></a></p><h3 id=a-id第2章-数据传输第2章-数据传输a><a id="第2章 数据传输">第2章 数据传输</a></h3><p>在进行数据传输之前，UART发送器将并行数据转换为串行格式然后再发送到UART接收器，UART接收器接收到串行数据再转换到并行格式。</p><p>对于UART和大多数串行通信，发送和接收都要将波特率设置为相同的值。常用的值为：</p><ul><li>9600</li><li>19200</li><li>38400</li><li>57600</li><li>115200</li></ul><p>允许的波特率差异最大值一般为10%，超过这个差异，数据的接收和发送就会错位，导致传输错误。</p><h4 id=a-id21-数据格式21-数据格式a><a id="2.1 数据格式">2.1 数据格式</a></h4><p>在UART中，传输模式为数据包传输，如 <em><a href="#表 2-1">表 2-1</a></em> 所示，在一个数据包中，不仅包含要传输的数据，还包含了起始位、奇偶校验位、停止位。
 要求如下：</p><ul><li>起始位：</br>空闲状态时，uart数据线保持高电平。若要开始传输，发送端uart将TX从高电平拉低到低电平一位时间表示传输的开始。
@@ -33,10 +33,12 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/amba5 title=amba5>amba5
 </a><a href=/icer/tags/apb title=apb>apb
 </a><a href=/icer/tags/axi title=axi>axi
+</a><a href=/icer/tags/blog title=blog>blog
 </a><a href=/icer/tags/bus title=bus>bus
 </a><a href=/icer/tags/git title=git>git
 </a><a href=/icer/tags/html title=html>html
 </a><a href=/icer/tags/i2c title=i2c>i2c
+</a><a href=/icer/tags/ic%E9%AA%8C%E8%AF%81 title=ic验证>ic验证
 </a><a href=/icer/tags/multi-layer-ahb title=multi-layer-ahb>multi-layer-ahb
 </a><a href=/icer/tags/nxp title=nxp>nxp
 </a><a href=/icer/tags/spi title=spi>spi
