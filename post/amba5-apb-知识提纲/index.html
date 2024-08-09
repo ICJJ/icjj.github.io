@@ -41,8 +41,11 @@ post-container"><h1 id=amba5-apb-知识提纲>AMBA5-APB-知识提纲</h1><h2 id=
 1. 0b00：安全空间
 2. 0b01：非安全空间
 3. 0b10：Root空间
-		4. 0b11：Realm空间
-		</code></pre></details><h3 id=a-id2-apb节基本时序图1-apb基本时序图a><a id="2 apb节基本时序图">1 APB基本时序图</a></h3><details><summary><strong>2.1 无等待写传输[点击展开]</strong></summary><pre><code>
+4. 0b11：Realm空间
+		</code></pre></details><details><summary><strong>1.8 pslverr拉高的几种情况[点击展开]</strong></summary><pre><code>
+1. 地址不对。
+2. 对只读寄存器进行写。
+    </code></pre></details><h3 id=a-id2-apb节基本时序图1-apb基本时序图a><a id="2 apb节基本时序图">1 APB基本时序图</a></h3><details><summary><strong>2.1 无等待写传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/apb/Figure_3-1_Write_transfer_with_no_wait_states.png alt>
     </code></pre></details><details><summary><strong>2.2 两个周期等待写传输[点击展开]</strong></summary><pre><code>
 <img src=https://icjj.github.io/icer/img/post/apb/Figure_3-2_Write_transfer_with_wait_states.png alt>
@@ -70,6 +73,8 @@ sidebar-container"><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>F
 </a><a href=/icer/tags/axi title=axi>axi
 </a><a href=/icer/tags/blog title=blog>blog
 </a><a href=/icer/tags/bus title=bus>bus
+</a><a href=/icer/tags/cache title=cache>cache
+</a><a href=/icer/tags/ddr title=ddr>ddr
 </a><a href=/icer/tags/git title=git>git
 </a><a href=/icer/tags/html title=html>html
 </a><a href=/icer/tags/i2c title=i2c>i2c
